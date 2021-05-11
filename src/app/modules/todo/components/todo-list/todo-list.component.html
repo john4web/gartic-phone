@@ -1,0 +1,4 @@
+<div class="border p-1">
+  <!-- iterate over the array -->
+  <div class="border-b" *ngFor="let todo of (todos$ | async); trackBy: trackById">{{ todo.title }}</div>
+</div>

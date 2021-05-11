@@ -9,7 +9,14 @@ import { StartComponent } from './components/start/start.component';
 import { WriteComponent } from './components/write/write.component';
 
 const routes: Routes = [
+
   {
+    path: '',
+    loadChildren: () => import('./modules/todo/todo.module').then(m => m.TodoModule)
+  },
+
+
+  /*{
     path: '',
     redirectTo: '/home',
     pathMatch: 'full'
@@ -41,7 +48,7 @@ const routes: Routes = [
   {
     path: '**',
     component: NotFoundComponent,
-  }
+  }*/
 ];
 
 @NgModule({

@@ -1,0 +1,5 @@
+<form (ngSubmit)="onSubmit()">
+  <label for="title">Todo Title:</label>
+  <input [(ngModel)]="title" id="title" name="title">
+  <button type="submit" [disabled]="loading">Add</button>
+</form>
