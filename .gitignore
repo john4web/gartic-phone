@@ -44,3 +44,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+#firebase configuration and credentials are not commited to the repository
+firebase.config.ts

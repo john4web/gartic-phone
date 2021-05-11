@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "gartic-phone-2b027": {
+      "hosting": {
+        "gartic-phone": [
+          "gartic-phone-2b027"
+        ]
+      }
+    }
+  }
+}
