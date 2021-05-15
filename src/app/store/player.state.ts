@@ -43,19 +43,21 @@ export class PlayerState implements NgxsOnInit {
   createRoom(context: StateContext<PlayerStateModel>, action: AddPlayer): void {
     const userId = this.store.selectSnapshot(AuthState.userId);
 
+    const followDoc = this.angularFireStore.collection('games').doc(action.id).ref;
 
-    if(this.angularFireStore.collection('games') != null) {
-      this.angularFireStore
-      .collection('games')
-      .doc(action.id)
-      .collection<Partial<PlayerInterface>>('players').add(
+    followDoc.get().then((doc) => {
+      if(doc.exists) {
+        this.angularFireStore
+        .collection('games')
+        .doc(action.id)
+        .collection<Partial<PlayerInterface>>('players').add(
         {
-          id: userId!,
-          name: action.name
-        }
-      )
-    } else {
-      console.log("no game exits")
-    }
+            id: userId!,
+            name: action.name
+        });
+      } else {
+        console.log("this game room does not exits")
+      }
+    });
   }
 }

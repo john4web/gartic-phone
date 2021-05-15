@@ -43,6 +43,5 @@ export class AuthState implements NgxsOnInit {
     context.patchState({
       user: action.user,
     });
-    console.log("userchanged");
   }
 }
