@@ -19,6 +19,8 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { RoomState } from './store/room.state';
 import { FormsModule } from '@angular/forms';
+import { AuthState } from './store/auth.state';
+import { PlayerState } from './store/player.state';
 
 const appInitFn = (angularAuth: AngularFireAuth) => {
   return () => angularAuth.signInAnonymously();
@@ -42,8 +44,8 @@ const appInitFn = (angularAuth: AngularFireAuth) => {
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    NgxsModule.forRoot(),
-    NgxsModule.forFeature([RoomState]),
+    NgxsModule.forRoot([AuthState]),
+    NgxsModule.forFeature([RoomState,PlayerState]),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     FormsModule

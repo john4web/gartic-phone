@@ -1,22 +1,29 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import {Action, Selector, State, StateContext} from '@ngxs/store';
-import { CreateRoom } from './room.actions';
+import {Action, NgxsOnInit, Selector, State, StateContext, Store} from '@ngxs/store';
+import { AuthState } from './auth.state';
+import { PlayerInterface, PlayerStateModel } from './player.state';
+import { CreateRoom, GetRoom } from './room.actions';
 
 export interface RoomInterface{
-  id: string;
-  host: string;
-  players: string[];
+  host: PlayerInterface;
+  players: PlayerInterface [];
 }
 
 export interface RoomStateModel{
-  rooms: RoomInterface[];
+  room: RoomInterface;
 }
 
 
 function getDefaultState(): RoomStateModel{
   return {
-    	rooms: []
+      room: {
+        host: {
+          id: "",
+          name: ""
+        },
+        players: []
+      }
   }
 }
 
@@ -25,33 +32,39 @@ function getDefaultState(): RoomStateModel{
   defaults: getDefaultState(),
 })
 @Injectable()
-export class RoomState {
+export class RoomState implements NgxsOnInit {
   @Selector()
   static rooms(state:RoomStateModel) {
-    return state.rooms;
+    return state.room;
   }
 
-  constructor(private angularFireStore: AngularFirestore){
+  @Selector()
+  static roomId(state:RoomStateModel) {
+    return state.room.host.id;
+  }
+
+  constructor(private angularFireStore: AngularFirestore, private store: Store){
 
   }
 
   ngxsOnInit(context?: StateContext<any>): void {
   }
 
+
   @Action(CreateRoom)
   createRoom(context: StateContext<RoomStateModel>, action: CreateRoom): void {
-    console.log('action', action);
+    const userId = this.store.selectSnapshot(AuthState.userId);
 
-    const rooms = [...context.getState().rooms];
-    rooms.push({
-      id : "0",
-      host: action.host,
-      players: [action.host]
-    });
-
-    context.patchState({
-      rooms,
-    });
+    this.angularFireStore
+      .collection<RoomInterface>("games")
+      .doc(userId!).set({
+        host : {
+          id: userId!,
+          name: action.host
+        },
+        players: []
+      });
 
   }
+
 }

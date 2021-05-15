@@ -5,3 +5,11 @@
   {{ name}}
 </form>
 
+<form (ngSubmit)="onSubmitJoin()">
+  <input [(ngModel)]= "nameClient" id="nameClient" name="nameClient" >
+  <input [(ngModel)]= "roomId" id="roomId" name="roomId" >
+  <button type="submit">Join Room</button>
+  {{nameClient}}
+</form>
+
+
