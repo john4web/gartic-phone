@@ -22,11 +22,6 @@ import { FormsModule } from '@angular/forms';
 import { AuthState } from './store/auth.state';
 import { PlayerState } from './store/player.state';
 
-const appInitFn = (angularAuth: AngularFireAuth) => {
-  return () => angularAuth.signInAnonymously();
-};
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,18 +40,13 @@ const appInitFn = (angularAuth: AngularFireAuth) => {
     AngularFireAuthModule,
     AngularFirestoreModule,
     NgxsModule.forRoot([AuthState]),
-    NgxsModule.forFeature([RoomState,PlayerState]),
+    NgxsModule.forFeature([RoomState, PlayerState]),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     FormsModule
 
   ],
-  providers: [{
-    provide: APP_INITIALIZER,
-    multi: true,
-    useFactory: appInitFn,
-    deps: [AngularFireAuth],
-  }],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

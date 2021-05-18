@@ -1,15 +1,29 @@
-<p>home works!</p>
-<form (ngSubmit)="onSubmit()">
-  <input [(ngModel)]= "name" id="name" name="name" >
-  <button type="submit">Create Room</button>
-  {{ name}}
-</form>
+<div>
+  <div>
+    <h1>Start a Game</h1>
+    <form (ngSubmit)="createRoom()">
+      <label for="host-name">Enter your name: </label>
+      <input type="text" id="host-name" [(ngModel)]= "hostName" name="host-name">
+      <button type="submit">Create new Room</button>
+    </form>
+  </div>
+<hr>
+  <div>
+    <h1>Join a Game</h1>
+    <form (ngSubmit)="joinRoom()">
+      <label for="client-name">Enter your name: </label>
+      <input type="text" id="client-name" [(ngModel)]= "clientName" name="client-name">
+      <label for="room-id">Enter the Room ID: </label>
+      <input type="text" id="room-id" [(ngModel)]= "pastedRoomID" name="room-id">
+      <button type="submit">Join the room</button>
+    </form>
+  </div>
 
-<form (ngSubmit)="onSubmitJoin()">
-  <input [(ngModel)]= "nameClient" id="nameClient" name="nameClient" >
-  <input [(ngModel)]= "roomId" id="roomId" name="roomId" >
-  <button type="submit">Join Room</button>
-  {{nameClient}}
-</form>
+<hr>
 
+<div>
+  <h1>Lobby</h1>
+  <div *ngFor="let player of (players$ | async); trackBy: trackById">{{ player.name }}</div>
+</div>
 
+</div>

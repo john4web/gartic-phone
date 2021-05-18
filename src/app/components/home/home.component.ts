@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { AddPlayer} from 'src/app/store/player.actions';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { AddPlayer } from 'src/app/store/player.actions';
+import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { CreateRoom } from 'src/app/store/room.actions';
 
 @Component({
@@ -9,22 +11,41 @@ import { CreateRoom } from 'src/app/store/room.actions';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  name= '';
-  nameClient = '';
-  roomId = '';
+  hostName = '';
+  clientName = '';
+  pastedRoomID = '';
 
   constructor(private store: Store) {
   }
 
+
+
+
+  @Select(PlayerState.players)
+
+  players$: Observable<PlayerInterface[]>;
+
+
+  trackById(index: number, player: PlayerInterface): string {
+    return player.id;
+  }
+
+
+
+
+
+
+
+
   ngOnInit(): void {
   }
 
-  onSubmit(): void {
-    this.store.dispatch(new CreateRoom(this.name));
+  createRoom(): void {
+    this.store.dispatch(new CreateRoom(this.hostName));
   }
 
-  onSubmitJoin(): void {
-    this.store.dispatch(new AddPlayer(this.roomId, this.nameClient));
+  joinRoom(): void {
+    this.store.dispatch(new AddPlayer(this.pastedRoomID, this.clientName, false));
   }
 
 }

@@ -1,6 +1,16 @@
-export class AddPlayer {
-  static readonly type = 'AddPlayer';
+import { PlayerInterface } from './player.state';
 
-  constructor(public id: string, public name: string) {
+export class AddPlayer {
+  static readonly type = '[Player] AddPlayer';
+
+  constructor(public pastedRoomID: string, public clientName: string, public isHost: boolean) {
+  }
+}
+
+
+export class SetPlayers {
+  static readonly type = '[Player] SetPlayers';
+
+  constructor(public players: PlayerInterface[]) {
   }
 }
