@@ -13,6 +13,8 @@ export interface PlayerInterface {
   name: string;
   isHost: boolean;
   image: string;
+  drawings: string[];
+  sentences: string[];
 }
 
 export interface PlayerStateModel {

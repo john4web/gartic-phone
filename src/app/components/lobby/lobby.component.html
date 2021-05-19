@@ -1,1 +1,7 @@
-<p>lobby works!</p>
+<div>
+  <h1>Lobby</h1>
+  <div *ngFor="let player of (players$ | async); trackBy: trackById">
+    {{ player.name }}
+    <img src={{player.image}} alt="" style="width: 40px; height: 40px;">
+  </div>
+</div>

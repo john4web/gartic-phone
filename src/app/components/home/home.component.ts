@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngxs/store';
 import { ChangeImage } from 'src/app/store/image.actions';
 import { ImageState } from 'src/app/store/image.state';
 import { AddPlayer } from 'src/app/store/player.actions';
-import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { CreateRoom } from 'src/app/store/room.actions';
 
 @Component({
@@ -18,37 +17,20 @@ export class HomeComponent implements OnInit {
   pastedRoomID = '';
   imageFile = '../assets/images/Divotkey.jpg';
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private route: ActivatedRoute, private router: Router) {
   }
-
-
-
-
-  @Select(PlayerState.players)
-
-  players$: Observable<PlayerInterface[]>;
-
-
-  trackById(index: number, player: PlayerInterface): string {
-    return player.id;
-  }
-
-
-
-
-
-
-
 
   ngOnInit(): void {
   }
 
   createRoom(): void {
     this.store.dispatch(new CreateRoom(this.hostName));
+    this.router.navigate([`../${'lobby'}`], { relativeTo: this.route });
   }
 
   joinRoom(): void {
     this.store.dispatch(new AddPlayer(this.pastedRoomID, this.clientName, false, this.imageFile));
+    this.router.navigate([`../${'lobby'}`], { relativeTo: this.route });
   }
 
   change(): void {
