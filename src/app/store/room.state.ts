@@ -6,6 +6,7 @@ import { PlayerInterface, PlayerStateModel } from './player.state';
 import { CreateRoom, GetRoom } from './room.actions';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { AddPlayer } from './player.actions';
+import { ImageState } from './image.state';
 
 export interface RoomInterface {
   createdAt: Date;
@@ -72,8 +73,8 @@ export class RoomState implements NgxsOnInit {
 
 
 
-
-      context?.dispatch(new AddPlayer(roomID!, action.hostName, true));
+      const fileName: string = '../assets/images/' + this.store.selectSnapshot(ImageState.currentImage).imageName;
+      context?.dispatch(new AddPlayer(roomID!, action.hostName, true, fileName));
 
       /*
             // adding the creator of the room as a player to the room

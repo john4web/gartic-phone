@@ -12,6 +12,7 @@ export interface PlayerInterface {
   id: string;
   name: string;
   isHost: boolean;
+  image: string;
 }
 
 export interface PlayerStateModel {
@@ -55,7 +56,7 @@ export class PlayerState implements NgxsOnInit {
       .collection('rooms')
       .doc(action.pastedRoomID)
       .collection<Partial<PlayerInterface>>('players')
-      .add({ name: action.clientName, isHost: action.isHost });
+      .add({ name: action.clientName, isHost: action.isHost, image: action.image });
 
     /*this.angularFireStore.collection('rooms')
       .doc(action.pastedRoomID)

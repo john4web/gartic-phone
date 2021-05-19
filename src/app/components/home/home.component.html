@@ -1,4 +1,8 @@
 <div>
+  <img src={{imageFile}} alt="" style="width: 200px; height: 200px;">
+  <button (click)="change()" >Change Images</button>
+  <hr>
+  <br>
   <div>
     <h1>Start a Game</h1>
     <form (ngSubmit)="createRoom()">
@@ -24,6 +28,9 @@
 <div>
   <h1>Lobby</h1>
   <div *ngFor="let player of (players$ | async); trackBy: trackById">{{ player.name }}</div>
+  <div *ngFor="let player of (players$ | async); trackBy: trackById">
+     <img src={{player.image}} alt="" style="width: 40px; height: 40px;">
+  </div>
+</div>
 </div>
 
-</div>

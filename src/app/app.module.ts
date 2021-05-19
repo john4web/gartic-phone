@@ -21,6 +21,7 @@ import { RoomState } from './store/room.state';
 import { FormsModule } from '@angular/forms';
 import { AuthState } from './store/auth.state';
 import { PlayerState } from './store/player.state';
+import { ImageState } from './store/image.state';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import { PlayerState } from './store/player.state';
     AngularFireAuthModule,
     AngularFirestoreModule,
     NgxsModule.forRoot([AuthState]),
-    NgxsModule.forFeature([RoomState, PlayerState]),
+    NgxsModule.forFeature([RoomState, PlayerState, ImageState]),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     FormsModule
