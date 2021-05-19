@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Store } from '@ngxs/store';
-import { AddPlayer} from 'src/app/store/player.actions';
+import { AuthState } from 'src/app/store/auth.state';
+import { AddPlayer } from 'src/app/store/player.actions';
 import { CreateRoom } from 'src/app/store/room.actions';
+import { RoomInterface } from 'src/app/store/room.state';
+import { map } from 'rxjs/operators';
+import { PlayerInterface } from 'src/app/store/player.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -9,11 +15,16 @@ import { CreateRoom } from 'src/app/store/room.actions';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  name= '';
+  name = '';
   nameClient = '';
   roomId = '';
+  player1Name = '';
+  player2Name = '';
 
-  constructor(private store: Store) {
+
+
+
+  constructor(private angularFireStore: AngularFirestore, private store: Store) {
   }
 
   ngOnInit(): void {
