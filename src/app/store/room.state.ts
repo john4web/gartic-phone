@@ -7,9 +7,6 @@ import { CreateRoom, GetRoom, SetRoom } from './room.actions';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { AddPlayer } from './player.actions';
 import { ImageState } from './image.state';
-import { v4 as uuid } from 'uuid';
-import { switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { UserState } from './user.state';
 
 export interface RoomInterface {

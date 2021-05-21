@@ -1,46 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BookComponent } from './components/book/book.component';
-import { DrawComponent } from './components/draw/draw.component';
-import { HomeComponent } from './components/home/home.component';
-import { LobbyComponent } from './components/lobby/lobby.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
-import { StartComponent } from './components/start/start.component';
-import { WriteComponent } from './components/write/write.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/home',
-    pathMatch: 'full'
+    loadChildren: () =>
+      import('./modules/lobby/lobby.module').then((m) => m.LobbyModule),
   },
   {
-    path: 'home',
-    component: HomeComponent,
-  },
-  {
-    path: 'lobby',
-    component: LobbyComponent,
-  },
-  {
-    path: 'start',
-    component: StartComponent,
-  },
-  {
-    path: 'draw',
-    component: DrawComponent,
-  },
-  {
-    path: 'write',
-    component: WriteComponent,
-  },
-  {
-    path: 'book',
-    component: BookComponent,
-  },
-  {
-    path: '**',
-    component: NotFoundComponent,
+    path: 'game',
+    loadChildren: () =>
+      import('./modules/game/game.module').then((m) => m.GameModule),
   }
 ];
 

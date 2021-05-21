@@ -1,0 +1,39 @@
+<div>
+  <div class="font-semibold text-2xl tracking-tight text-center p-5 ">1. Choose an Avatar and a nickname:</div>
+  <div class="flex flex-col items-center">
+    <div>
+      <img src={{imageFile}} alt="" style="width: 200px; height: 200px;">
+      <button (click)="change()" class="border-2 border-blue-700 bg-blue-200 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-full">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.974 22.957c-10.957-11.421 2.326-20.865 10.384-13.309l-2.464 2.352h9.106v-8.947l-2.232 2.229c-14.794-13.203-31.51 7.051-14.794 17.675z"/></svg>
+      </button>
+    </div>
+    <div class="pt-5">
+      <label for="user-name" class="block font-bold">Enter your nickname:</label>
+    <input type="text" id="user-name" [(ngModel)]= "userName" name="user-name" class="shadow appearance-none border rounded w-100 py-2 px-3 text-grey-darker">
+    </div>
+     </div>
+
+<div class="font-semibold text-2xl tracking-tight text-center p-5 pt-10">2. Start a new room or Join an existing Room</div>
+
+<div class="flex flex-col items-center">
+  <div>
+    <button type="button" (click)="createRoom()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create new Room</button>
+  </div>
+  <div class="pt-20">
+    <label for="pasted-room-id" class="block font-bold">Enter the Room ID:</label>
+    <input
+    [(ngModel)]= "pastedRoomID"
+    name="pasted-room-id"
+    id="pasted-room-id"
+    type="text"
+    name="name"
+    class="shadow appearance-none border rounded w-100 py-2 px-3 text-grey-darker"
+    />
+    <button type="button" (click)="joinRoom()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Join the room</button>
+  </div>
+</div>
+
+
+</div>
+
+

@@ -12,8 +12,7 @@ import { CreateRoom } from 'src/app/store/room.actions';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  hostName = '';
-  clientName = '';
+  userName = '';
   pastedRoomID = '';
   imageFile = '../assets/images/Divotkey.jpg';
 
@@ -24,12 +23,12 @@ export class HomeComponent implements OnInit {
   }
 
   createRoom(): void {
-    this.store.dispatch(new CreateRoom(this.hostName));
+    this.store.dispatch(new CreateRoom(this.userName));
     this.router.navigate([`../${'lobby'}`], { relativeTo: this.route });
   }
 
   joinRoom(): void {
-    this.store.dispatch(new AddPlayer(this.pastedRoomID, this.clientName, false, this.imageFile));
+    this.store.dispatch(new AddPlayer(this.pastedRoomID, this.userName, false, this.imageFile));
     this.router.navigate([`../${'lobby'}`], { relativeTo: this.route });
   }
 
