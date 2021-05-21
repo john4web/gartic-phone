@@ -4,4 +4,7 @@
     {{ player.name }}
     <img src={{player.image}} alt="" style="width: 40px; height: 40px;">
   </div>
+
+  <button *ngIf="(roomId$ | async) === (uid$ | async)">Start Game</button>
+
 </div>

@@ -6,7 +6,9 @@ import { switchMap, tap } from 'rxjs/operators';
 import { UserChanged } from './auth.actions';
 import { AuthState } from './auth.state';
 import { AddPlayer, SetPlayers } from './player.actions';
-import { RoomState } from './room.state';
+import { SetRoom } from './room.actions';
+import { RoomInterface, RoomState } from './room.state';
+import { UserState } from './user.state';
 
 export interface PlayerInterface {
   id: string;
@@ -68,6 +70,24 @@ export class PlayerState implements NgxsOnInit {
         context?.dispatch(new SetPlayers(players));
       });*/
 
+    this.store.select(UserState.userId)
+      .pipe(
+        switchMap(userId => {
+          if (userId === null) {
+            return of(null);
+          } else {
+            return this.angularFireStore
+              .collection('rooms')
+              .doc<RoomInterface>(action.pastedRoomID)
+              .valueChanges()
+              .pipe(
+                tap(room => {
+                  context?.dispatch(new SetRoom(room));
+                })
+              );
+          }
+        })
+      ).subscribe();
 
 
     // listen for changes in firebase collection rooom
@@ -90,7 +110,6 @@ export class PlayerState implements NgxsOnInit {
                 })
               );
           }
-
         })
       ).subscribe();
 

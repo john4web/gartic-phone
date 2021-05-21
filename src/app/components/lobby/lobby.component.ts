@@ -1,7 +1,10 @@
+import { stringify } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
+import { RoomState } from 'src/app/store/room.state';
+import { UserState } from 'src/app/store/user.state';
 
 @Component({
   selector: 'app-lobby',
@@ -12,6 +15,12 @@ export class LobbyComponent implements OnInit {
 
   constructor() { }
 
+
+  @Select(UserState.userId) uid$: Observable<string>;
+  @Select(RoomState.roomId) roomId$: Observable<string>;
+
+  showButton: boolean;
+
   @Select(PlayerState.players)
   players$: Observable<PlayerInterface[]>;
 
@@ -20,6 +29,22 @@ export class LobbyComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.showButton = this.uid$ === this.roomId$;
+
+    let aa: string;
+    let b: string;
+
+    this.uid$.subscribe((a) => {
+      aa = a;
+    });
+
+
+    this.roomId$.subscribe((a) => {
+      b = a;
+    });
+
+    this.showButton = aa === b;
+
   }
 
 }

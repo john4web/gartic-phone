@@ -3,10 +3,14 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
 import { AuthState } from './auth.state';
 import { PlayerInterface, PlayerStateModel } from './player.state';
-import { CreateRoom, GetRoom } from './room.actions';
+import { CreateRoom, GetRoom, SetRoom } from './room.actions';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { AddPlayer } from './player.actions';
 import { ImageState } from './image.state';
+import { v4 as uuid } from 'uuid';
+import { switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { UserState } from './user.state';
 
 export interface RoomInterface {
   createdAt: Date;
@@ -56,41 +60,27 @@ export class RoomState implements NgxsOnInit {
   @Action(CreateRoom)
   createRoom(context: StateContext<RoomStateModel>, action: CreateRoom): void {
 
-    this.angularAuth.signOut();
-    this.angularAuth.signInAnonymously().then((obj) => {
-      const roomID = obj.user?.uid;
+    const roomID = this.store.selectSnapshot(UserState.userId);
+    // Adding new room
+    this.angularFireStore
+      .collection<RoomInterface>('rooms')
+      .doc(roomID).set({
+        createdAt: new Date(),
+        id: roomID
+      });
 
-      // Adding new room
-      this.angularFireStore
-        .collection<RoomInterface>('rooms')
-        .doc(roomID!).set({
-          createdAt: new Date(),
-          id: roomID!
-        });
+    const fileName: string = '../assets/images/' + this.store.selectSnapshot(ImageState.currentImage).imageName;
+    context?.dispatch(new AddPlayer(roomID!, action.hostName, true, fileName));
 
-
-
-
-
-
-      const fileName: string = '../assets/images/' + this.store.selectSnapshot(ImageState.currentImage).imageName;
-      context?.dispatch(new AddPlayer(roomID!, action.hostName, true, fileName));
-
-      /*
-            // adding the creator of the room as a player to the room
-            this.angularFireStore
-              .collection<RoomInterface>('rooms')
-              .doc(roomID!).collection('players').add({
-                name: action.hostName,
-                isHost: true
-              });
-      */
-
-    });
-
-
-
-
+    /*
+          // adding the creator of the room as a player to the room
+          this.angularFireStore
+            .collection<RoomInterface>('rooms')
+            .doc(roomID!).collection('players').add({
+              name: action.hostName,
+              isHost: true
+            });
+    */
     // console.log(this.store.selectSnapshot(AuthState.userId));
     /* const userId = this.store.selectSnapshot(AuthState.userId);
 
@@ -106,16 +96,11 @@ export class RoomState implements NgxsOnInit {
 
   }
 
-
-
-  // @Action(SetRoom)
-  // setPlayers(context: StateContext<PlayerStateModel>, action: SetRoom): void {
-  //   context.patchState({
-
-  //   });
-
-
-  // }
-
-
+  @Action(SetRoom)
+  setRoom(context: StateContext<RoomStateModel>, action: SetRoom): void {
+    context.patchState({
+      room: action.room,
+    });
+    // }
+  }
 }

@@ -1,3 +1,4 @@
+import { RoomInterface, RoomState } from './room.state';
 
 export class CreateRoom {
   static readonly type = 'CreateRoom';
@@ -12,3 +13,12 @@ export class GetRoom {
   constructor(public id: string) {
   }
 }
+
+
+export class SetRoom {
+  static readonly type = 'SetRoom';
+
+  constructor(public room: RoomInterface) {
+  }
+}
+
