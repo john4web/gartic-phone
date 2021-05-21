@@ -7,4 +7,6 @@
 
   <button *ngIf="(roomId$ | async) === (uid$ | async)">Start Game</button>
 
+  <button (click)="addProperty()"> Add Property</button>
+
 </div>

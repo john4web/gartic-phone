@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
 import { of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { UserChanged } from './auth.actions';
 import { AuthState } from './auth.state';
-import { AddPlayer, SetPlayers } from './player.actions';
+import { AddPlayer, AddText, SetPlayers } from './player.actions';
 import { SetRoom } from './room.actions';
 import { RoomInterface, RoomState } from './room.state';
 import { UserState } from './user.state';
@@ -46,6 +46,7 @@ export class PlayerState implements NgxsOnInit {
     return state.players;
   }
 
+
   ngxsOnInit(context?: StateContext<any>): void {
 
   }
@@ -60,7 +61,8 @@ export class PlayerState implements NgxsOnInit {
       .collection('rooms')
       .doc(action.pastedRoomID)
       .collection<Partial<PlayerInterface>>('players')
-      .add({ name: action.clientName, isHost: action.isHost, image: action.image });
+      .doc(this.store.selectSnapshot(UserState.userId))
+      .set({ name: action.clientName, isHost: action.isHost, image: action.image });
 
     /*this.angularFireStore.collection('rooms')
       .doc(action.pastedRoomID)
@@ -139,16 +141,29 @@ export class PlayerState implements NgxsOnInit {
   }
 
 
-
-
-
   @Action(SetPlayers)
   setPlayers(context: StateContext<PlayerStateModel>, action: SetPlayers): void {
     context.patchState({
       players: action.players,
     });
+  }
 
 
+
+  @Action(AddText)
+  addText(context: StateContext<PlayerStateModel>, action: AddText): void {
+    this.angularFireStore
+      .collection('rooms')
+      .doc(this.store.selectSnapshot(RoomState.roomId))
+      .collection<Partial<PlayerInterface>>('players')
+      .doc(this.store.selectSnapshot(UserState.userId))
+      .collection('album')
+      .doc('1')
+      .set(
+        {
+          text: action.text
+        }
+      );
   }
 
 

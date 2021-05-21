@@ -2,6 +2,7 @@ import { stringify } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { AddText } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { RoomState } from 'src/app/store/room.state';
 import { UserState } from 'src/app/store/user.state';
@@ -13,7 +14,7 @@ import { UserState } from 'src/app/store/user.state';
 })
 export class LobbyComponent implements OnInit {
 
-  constructor() { }
+  constructor(private store: Store) { }
 
 
   @Select(UserState.userId) uid$: Observable<string>;
@@ -29,22 +30,10 @@ export class LobbyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.showButton = this.uid$ === this.roomId$;
+  }
 
-    let aa: string;
-    let b: string;
-
-    this.uid$.subscribe((a) => {
-      aa = a;
-    });
-
-
-    this.roomId$.subscribe((a) => {
-      b = a;
-    });
-
-    this.showButton = aa === b;
-
+  addProperty(): void {
+    this.store.dispatch(new AddText('hallo'));
   }
 
 }

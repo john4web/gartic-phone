@@ -7,10 +7,16 @@ export class AddPlayer {
   }
 }
 
-
 export class SetPlayers {
   static readonly type = '[Player] SetPlayers';
 
   constructor(public players: PlayerInterface[]) {
+  }
+}
+
+export class AddText {
+  static readonly type = '[Player] AddText';
+
+  constructor(public text: string) {
   }
 }
