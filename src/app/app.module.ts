@@ -15,6 +15,7 @@ import { AuthState } from './store/auth.state';
 import { PlayerState } from './store/player.state';
 import { ImageState } from './store/image.state';
 import { UserState } from './store/user.state';
+import { AlbumState } from './store/album.state';
 
 const appInitFn = (angularAuth: AngularFireAuth) => {
   return () => angularAuth.signInAnonymously();
@@ -31,7 +32,7 @@ const appInitFn = (angularAuth: AngularFireAuth) => {
     AngularFireAuthModule,
     AngularFirestoreModule,
     NgxsModule.forRoot([AuthState, UserState]),
-    NgxsModule.forFeature([RoomState, PlayerState, ImageState]),
+    NgxsModule.forFeature([RoomState, PlayerState, ImageState, AlbumState]),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
 

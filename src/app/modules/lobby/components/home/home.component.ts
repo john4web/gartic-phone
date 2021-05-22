@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
+import { UserChanged } from 'src/app/store/auth.actions';
 import { ChangeImage } from 'src/app/store/image.actions';
 import { ImageState } from 'src/app/store/image.state';
 import { AddPlayer } from 'src/app/store/player.actions';
-import { CreateRoom } from 'src/app/store/room.actions';
-
+import { CreateRoom, GetRoomFromFirestore } from 'src/app/store/room.actions';
+import firebase from 'firebase';
+import User = firebase.User;
+import { AuthState } from 'src/app/store/auth.state';
+import { PlayerInterface } from 'src/app/store/player.state';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -16,20 +21,50 @@ export class HomeComponent implements OnInit {
   pastedRoomID = '';
   imageFile = '../assets/images/Divotkey.jpg';
 
-  constructor(private store: Store, private route: ActivatedRoute, private router: Router) {
+  constructor(private store: Store, private route: ActivatedRoute, private router: Router, private angularAuth: AngularFireAuth) {
   }
 
   ngOnInit(): void {
+
   }
 
   createRoom(): void {
-    this.store.dispatch(new CreateRoom(this.userName));
+    this.store.dispatch(new CreateRoom(this.userName, this.imageFile));
     this.router.navigate(['home/lobby']);
   }
 
   joinRoom(): void {
-    this.store.dispatch(new AddPlayer(this.pastedRoomID, this.userName, false, this.imageFile));
+
+    this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
+
+    const newPlayer: PlayerInterface = {
+      id: '',
+      name: this.userName,
+      isHost: false,
+      image: this.imageFile
+    };
+    this.store.dispatch(new AddPlayer(this.pastedRoomID, newPlayer));
     this.router.navigate(['home/lobby']);
+
+    /*
+    this.store.dispatch(new UserUpdate(this.pastedRoomID));
+
+    //localStorage.setItem('joinedRoomID', this.pastedRoomID);
+    this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
+
+
+
+        const a = this.angularAuth.signInWithCredential
+        this.store.dispatch(new UserChanged(
+
+        ));
+
+        this.angularAuth.signInWithCredential(this.pastedRoomID);
+
+        this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
+        this.store.dispatch(new AddPlayer(this.pastedRoomID, this.userName, false, this.imageFile));
+        this.router.navigate(['home/lobby']);
+        */
   }
 
   change(): void {

@@ -1,8 +1,8 @@
 
-export class Changed {
-  static readonly type = 'Changed';
+export class SetMyUser {
+  static readonly type = '[User] SetMyUser';
 
-  constructor(public user: string) {
+  constructor(public userID: string) {
   }
 
 }

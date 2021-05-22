@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { ObjectUnsubscribedError, Observable } from 'rxjs';
 import { AddText } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { RoomState } from 'src/app/store/room.state';
 import { UserState } from 'src/app/store/user.state';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { v4 as uuid } from 'uuid';
+import { AuthState } from 'src/app/store/auth.state';
+import { ChangeRoomPage } from 'src/app/store/room.actions';
 
 @Component({
   selector: 'app-lobby',
@@ -14,10 +17,10 @@ import { Router } from '@angular/router';
 })
 export class LobbyComponent implements OnInit {
 
-  constructor(private store: Store, private router: Router) { }
+  constructor(private store: Store, private router: Router, private route: ActivatedRoute) { }
 
 
-  @Select(UserState.userId) uid$: Observable<string>;
+  @Select(AuthState.userId) authUserId$: Observable<string>;
   @Select(RoomState.roomId) roomId$: Observable<string>;
 
   showButton: boolean;
@@ -26,10 +29,12 @@ export class LobbyComponent implements OnInit {
   players$: Observable<PlayerInterface[]>;
 
   trackById(index: number, player: PlayerInterface): string {
+    console.log('playerID: ' + player.id);
     return player.id;
   }
 
   ngOnInit(): void {
+
   }
 
   addProperty(): void {
@@ -37,7 +42,11 @@ export class LobbyComponent implements OnInit {
   }
 
   startGame(): void {
-    this.router.navigate(['/game']);
+
+    this.store.dispatch(new ChangeRoomPage(1));
+
+
+    // this.router.navigate(['/game']);
   }
 
 }

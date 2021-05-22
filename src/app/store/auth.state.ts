@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { CONTEXT_NAME } from '@angular/compiler/src/render3/view/util';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -30,6 +31,11 @@ export class AuthState implements NgxsOnInit {
     return state.user?.uid || null;
   }
 
+  @Selector()
+  static user(state: AuthStateModel): User | null {
+    return state.user || null;
+  }
+
   ngxsOnInit(context?: StateContext<AuthStateModel>): void {
     this.authService.authState.subscribe(user => {
       // dispatch actions when the user changes
@@ -44,4 +50,6 @@ export class AuthState implements NgxsOnInit {
       user: action.user,
     });
   }
+
+
 }

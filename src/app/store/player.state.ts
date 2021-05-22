@@ -8,6 +8,7 @@ import { AuthState } from './auth.state';
 import { AddPlayer, AddText, SetPlayers } from './player.actions';
 import { SetRoom } from './room.actions';
 import { RoomInterface, RoomState } from './room.state';
+import { SetMyUser } from './user.actions';
 import { UserState } from './user.state';
 
 export interface PlayerInterface {
@@ -15,24 +16,22 @@ export interface PlayerInterface {
   name: string;
   isHost: boolean;
   image: string;
-  drawings: string[];
-  sentences: string[];
 }
 
 export interface PlayerStateModel {
   players: PlayerInterface[];
 }
 
-
+/*
 function getDefaultState(): PlayerStateModel {
   return {
     players: []
   };
-}
+}*/
 
 @State<PlayerStateModel>({
   name: 'playerstate',
-  defaults: getDefaultState(),
+  // defaults: getDefaultState(),
 })
 @Injectable()
 export class PlayerState implements NgxsOnInit {
@@ -49,20 +48,71 @@ export class PlayerState implements NgxsOnInit {
 
   ngxsOnInit(context?: StateContext<any>): void {
 
+    const fireStore = this.angularFireStore;
+
+    this.store
+      .select(RoomState.roomId)
+      .pipe(
+        switchMap((roomId) => {
+          if (!roomId) {
+            return of(null);
+          } else {
+            return fireStore
+              .collection('rooms')
+              .doc(roomId)
+              .collection<PlayerInterface>('players')
+              .valueChanges({
+                idField: 'id',
+              })
+              .pipe(
+                tap((players) => {
+                  context?.dispatch(new SetPlayers(players));
+                })
+              );
+          }
+        })
+      )
+      .subscribe();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
 
 
   @Action(AddPlayer)
   addPlayer(context: StateContext<PlayerStateModel>, action: AddPlayer): void {
+
+
+
+
+
+
+
+
     // const userId = this.store.selectSnapshot(AuthState.userId);
 
     // const followDoc = this.angularFireStore.collection('games').doc(action.id).ref;
     this.angularFireStore
       .collection('rooms')
-      .doc(action.pastedRoomID)
-      .collection<Partial<PlayerInterface>>('players')
-      .doc(this.store.selectSnapshot(UserState.userId))
-      .set({ name: action.clientName, isHost: action.isHost, image: action.image });
+      .doc(action.roomID)
+      .collection<Partial<PlayerInterface>>('players').add(action.newPlayer).then((docRef) => {
+        this.store.dispatch(new SetMyUser(docRef.id));
+      });
+
+
+    /* .doc(this.store.selectSnapshot(UserState.userId))
+     .set({ name: action.clientName, isHost: action.isHost, image: action.image });*/
 
     /*this.angularFireStore.collection('rooms')
       .doc(action.pastedRoomID)
@@ -71,54 +121,54 @@ export class PlayerState implements NgxsOnInit {
       }).subscribe((players) => {
         context?.dispatch(new SetPlayers(players));
       });*/
-
-    this.store.select(UserState.userId)
-      .pipe(
-        switchMap(userId => {
-          if (userId === null) {
-            return of(null);
-          } else {
-            return this.angularFireStore
-              .collection('rooms')
-              .doc<RoomInterface>(action.pastedRoomID)
-              .valueChanges()
-              .pipe(
-                tap(room => {
-                  context?.dispatch(new SetRoom(room));
-                })
-              );
-          }
-        })
-      ).subscribe();
-
-
-    // listen for changes in firebase collection rooom
-    this.store.select(RoomState)
-      .pipe(
-        switchMap(player => {
-          if (player === null) {
-            return of(null);
-          } else {
-            return this.angularFireStore
-              .collection('rooms')
-              .doc(action.pastedRoomID)
-              .collection<PlayerInterface>('players')
-              .valueChanges({
-                idField: 'id'
-              })
-              .pipe(
-                tap(players => {
-                  context?.dispatch(new SetPlayers(players));
-                })
-              );
-          }
-        })
-      ).subscribe();
+    /*
+        this.store.select(UserState.userId)
+          .pipe(
+            switchMap(userId => {
+              if (userId === null) {
+                return of(null);
+              } else {
+                return this.angularFireStore
+                  .collection('rooms')
+                  .doc<RoomInterface>(action.pastedRoomID)
+                  .valueChanges()
+                  .pipe(
+                    tap(room => {
+                      context?.dispatch(new SetRoom(room));
+                    })
+                  );
+              }
+            })
+          ).subscribe();
 
 
+        // listen for changes in firebase collection rooom
+        this.store.select(RoomState)
+          .pipe(
+            switchMap(player => {
+              if (player === null) {
+                return of(null);
+              } else {
+                return this.angularFireStore
+                  .collection('rooms')
+                  .doc(action.pastedRoomID)
+                  .collection<PlayerInterface>('players')
+                  .valueChanges({
+                    idField: 'id'
+                  })
+                  .pipe(
+                    tap(players => {
+                      context?.dispatch(new SetPlayers(players));
+                    })
+                  );
+              }
+            })
+          ).subscribe();
 
 
 
+
+    */
 
 
 
