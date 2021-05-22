@@ -5,6 +5,7 @@ import { AddText } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { RoomState } from 'src/app/store/room.state';
 import { UserState } from 'src/app/store/user.state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lobby',
@@ -13,7 +14,7 @@ import { UserState } from 'src/app/store/user.state';
 })
 export class LobbyComponent implements OnInit {
 
-  constructor(private store: Store) { }
+  constructor(private store: Store, private router: Router) { }
 
 
   @Select(UserState.userId) uid$: Observable<string>;
@@ -33,6 +34,10 @@ export class LobbyComponent implements OnInit {
 
   addProperty(): void {
     this.store.dispatch(new AddText('hallo'));
+  }
+
+  startGame(): void {
+    this.router.navigate(['/game']);
   }
 
 }

@@ -24,12 +24,12 @@ export class HomeComponent implements OnInit {
 
   createRoom(): void {
     this.store.dispatch(new CreateRoom(this.userName));
-    this.router.navigate([`../${'lobby'}`], { relativeTo: this.route });
+    this.router.navigate(['home/lobby']);
   }
 
   joinRoom(): void {
     this.store.dispatch(new AddPlayer(this.pastedRoomID, this.userName, false, this.imageFile));
-    this.router.navigate([`../${'lobby'}`], { relativeTo: this.route });
+    this.router.navigate(['home/lobby']);
   }
 
   change(): void {
