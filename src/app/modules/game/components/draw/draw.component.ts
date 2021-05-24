@@ -34,7 +34,7 @@ export class DrawComponent implements OnInit {
 
 
   saveStoryText() {
-    this.store.dispatch(new AddContent(this.storyText));
+    this.store.dispatch(new AddContent(this.drawing));
   }
 
   timerFinished() {
