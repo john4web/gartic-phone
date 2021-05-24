@@ -34,6 +34,7 @@ export class WriteComponent implements OnInit {
   }
 
 
+
   saveStoryText() {
     this.store.dispatch(new AddContent(this.storyText));
   }

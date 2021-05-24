@@ -55,7 +55,7 @@ export class LobbyComponent implements OnInit {
     const authID = this.store.selectSnapshot(RoomState.roomId);
     navigator.clipboard.writeText(authID).then(
       () => {
-        this.copyClipboardMessage = 'Room ID copied to clipboard!';
+        this.copyClipboardMessage = 'Room ID copied!';
       },
       () => {
         this.copyClipboardMessage = 'Copying failed!';

@@ -28,16 +28,16 @@ export class DrawComponent implements OnInit {
   }
 
   constructor(private store: Store) { }
-
   ngOnInit(): void {
+
   }
 
-
-  saveStoryText() {
+  drawingChanged(newDrawing): void {
+    this.drawing = newDrawing;
     this.store.dispatch(new AddContent(this.drawing));
   }
 
-  timerFinished() {
+  timerFinished(): void {
     this.store.dispatch(new UpdateAlbumId());
     this.store.dispatch(new UpdateRound());
   }

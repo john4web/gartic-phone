@@ -1,5 +1,5 @@
 <div class="pt-20">
-  <app-drawing-editor (image)="drawing = $event"></app-drawing-editor>
+  <app-drawing-editor (image)="drawingChanged($event)"></app-drawing-editor>
 
   <div *ngFor="let player of (players$ | async); trackBy: trackById">
     <p *ngIf="player.id === (userId$|async)"> Write in Album {{player.currentAlbumId}} </p>
