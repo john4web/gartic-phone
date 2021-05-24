@@ -24,6 +24,8 @@ export class LobbyComponent implements OnInit {
   @Select(RoomState.roomId) roomId$: Observable<string>;
 
   showButton: boolean;
+  copyClipboardMessage = '';
+  showCopyClipboardMessage = false;
 
   @Select(PlayerState.players)
   players$: Observable<PlayerInterface[]>;
@@ -44,6 +46,27 @@ export class LobbyComponent implements OnInit {
   startGame(): void {
 
     this.store.dispatch(new ChangeRoomPage(1));
+  }
+
+  copyRoomIDToClipboard(): void {
+    const authID = this.store.selectSnapshot(RoomState.roomId);
+    navigator.clipboard.writeText(authID).then(
+      () => {
+        this.copyClipboardMessage = 'Room ID copied to clipboard!';
+      },
+      () => {
+        this.copyClipboardMessage = 'Copying failed!';
+      }
+    );
+
+    this.showCopyClipboardMessage = true;
+    console.log(this.showCopyClipboardMessage);
+    setTimeout(() => {
+      this.showCopyClipboardMessage = false;
+      console.log(this.showCopyClipboardMessage);
+    }, 3000);
+
+
   }
 
 }
