@@ -189,40 +189,19 @@ export class RoomState implements NgxsOnInit {
       room: action.room,
     });
 
-
-    // change router according to the page field in the room state
-    /*
-    switch (action.room.page) {
-      case 1:
-        this.router.navigate(['/game']);
-        break;
-    case 2:
-      this.router.navigate(['/draw']);
-      break;
-    case 3:
-      this.router.navigate(['/write']);
-      break;
-    }
-      */
-
     if (action.room.page === 1 && action.room.round === 0) {
       this.ngZone.run(() => this.router.navigate(['/game']));
     }
     else if (action.room.page === 1) {
       if (action.room.round % 2) {
-        this.ngZone.run(() => this.router.navigate(['/game/write']));
-      } else {
         this.ngZone.run(() => this.router.navigate(['/game/draw']));
+      } else {
+        this.ngZone.run(() => this.router.navigate(['/game/write']));
       }
     }
     if (action.room.page === 2) {
       this.ngZone.run(() => this.router.navigate(['/game/book']));
     }
-
-
-
-
-
 
   }
 }

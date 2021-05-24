@@ -13,7 +13,7 @@ import { UserState } from 'src/app/store/user.state';
 })
 export class DrawComponent implements OnInit {
 
-  storyText = '';
+  drawing = '';
 
   @Select(UserState.userId) userId$: Observable<string>;
 
@@ -27,12 +27,6 @@ export class DrawComponent implements OnInit {
   constructor(private store: Store) { }
 
   ngOnInit(): void {
-  }
-
-
-  saveStoryText() {
-    this.store.dispatch(new UpdateAlbumId());
-    this.store.dispatch(new UpdateRound());
   }
 
 }

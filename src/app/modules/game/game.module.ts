@@ -7,6 +7,8 @@ import { DrawComponent } from './components/draw/draw.component';
 import { WriteComponent } from './components/write/write.component';
 import { BookComponent } from './components/book/book.component';
 import { FormsModule } from '@angular/forms';
+import { DrawingEditorModule } from '../drawing-editor/drawing-editor.module';
+import { DrawingEditorComponent } from '../drawing-editor/components/drawing-editor/drawing-editor.component';
 
 
 @NgModule({
@@ -19,7 +21,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     GameRoutingModule,
-    FormsModule
+    FormsModule,
+    DrawingEditorModule
   ]
 })
 export class GameModule { }

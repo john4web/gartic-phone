@@ -10,6 +10,9 @@ import { DrawingEditorComponent } from './components/drawing-editor/drawing-edit
   ],
   imports: [
     CommonModule
+  ],
+  exports: [
+    DrawingEditorComponent
   ]
 })
 export class DrawingEditorModule { }
