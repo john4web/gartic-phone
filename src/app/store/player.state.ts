@@ -3,9 +3,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
+import { AlbumInterface } from './album.state';
 import { UserChanged } from './auth.actions';
 import { AuthState } from './auth.state';
-import { AddPlayer, AddText, SetPlayers } from './player.actions';
+import { AddPlayer, AddText, GetCurrentAlbumById, GetPlayersFromFirestore, SetPlayers, UpdateAlbumId } from './player.actions';
 import { SetRoom } from './room.actions';
 import { RoomInterface, RoomState } from './room.state';
 import { SetMyUser } from './user.actions';
@@ -13,9 +14,11 @@ import { UserState } from './user.state';
 
 export interface PlayerInterface {
   id: string;
+  playerId: number;
   name: string;
   isHost: boolean;
   image: string;
+  currentAlbumId: number;
 }
 
 export interface PlayerStateModel {
@@ -37,7 +40,6 @@ function getDefaultState(): PlayerStateModel {
 export class PlayerState implements NgxsOnInit {
 
   constructor(private angularFireStore: AngularFirestore, private store: Store) {
-
   }
 
   @Selector()
@@ -46,8 +48,14 @@ export class PlayerState implements NgxsOnInit {
   }
 
 
-  ngxsOnInit(context?: StateContext<any>): void {
+  @Selector()
+  static playerCount(state: PlayerStateModel): number {
+    return state.players.length;
+  }
 
+
+  ngxsOnInit(context?: StateContext<any>): void {
+    /*
     const fireStore = this.angularFireStore;
 
     this.store
@@ -73,121 +81,41 @@ export class PlayerState implements NgxsOnInit {
         })
       )
       .subscribe();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      */
   }
 
 
   @Action(AddPlayer)
   addPlayer(context: StateContext<PlayerStateModel>, action: AddPlayer): void {
-
-
-
-
-
-
-
-
-    // const userId = this.store.selectSnapshot(AuthState.userId);
-
-    // const followDoc = this.angularFireStore.collection('games').doc(action.id).ref;
+    console.log('roomId + ' + action.roomID);
     this.angularFireStore
       .collection('rooms')
       .doc(action.roomID)
-      .collection<Partial<PlayerInterface>>('players').add(action.newPlayer).then((docRef) => {
-        this.store.dispatch(new SetMyUser(docRef.id));
+      .collection<Partial<PlayerInterface>>('players')
+      .doc(this.store.selectSnapshot(UserState.userId))
+      .set(action.newPlayer);
+  }
+
+  @Action(GetPlayersFromFirestore)
+  getPlayersFromFirestore(context: StateContext<PlayerStateModel>, action: GetPlayersFromFirestore): void {
+    this.angularFireStore
+      .collection<RoomInterface>('rooms')
+      .doc(action.roomID)
+      .collection('players')
+      .get().subscribe(() => {
+        this.angularFireStore
+          .collection<RoomInterface>('rooms')
+          .doc(action.roomID)
+          .collection<PlayerInterface>('players')
+          .valueChanges({
+          })
+          .pipe(
+            tap((players) => {
+              context?.dispatch(new SetPlayers(players));
+            })
+          )
+          .subscribe();
       });
-
-
-    /* .doc(this.store.selectSnapshot(UserState.userId))
-     .set({ name: action.clientName, isHost: action.isHost, image: action.image });*/
-
-    /*this.angularFireStore.collection('rooms')
-      .doc(action.pastedRoomID)
-      .valueChanges({
-        idField: 'id'
-      }).subscribe((players) => {
-        context?.dispatch(new SetPlayers(players));
-      });*/
-    /*
-        this.store.select(UserState.userId)
-          .pipe(
-            switchMap(userId => {
-              if (userId === null) {
-                return of(null);
-              } else {
-                return this.angularFireStore
-                  .collection('rooms')
-                  .doc<RoomInterface>(action.pastedRoomID)
-                  .valueChanges()
-                  .pipe(
-                    tap(room => {
-                      context?.dispatch(new SetRoom(room));
-                    })
-                  );
-              }
-            })
-          ).subscribe();
-
-
-        // listen for changes in firebase collection rooom
-        this.store.select(RoomState)
-          .pipe(
-            switchMap(player => {
-              if (player === null) {
-                return of(null);
-              } else {
-                return this.angularFireStore
-                  .collection('rooms')
-                  .doc(action.pastedRoomID)
-                  .collection<PlayerInterface>('players')
-                  .valueChanges({
-                    idField: 'id'
-                  })
-                  .pipe(
-                    tap(players => {
-                      context?.dispatch(new SetPlayers(players));
-                    })
-                  );
-              }
-            })
-          ).subscribe();
-
-
-
-
-    */
-
-
-
-
-    /*
-        followDoc.get().then((doc) => {
-          if (doc.exists) {
-            this.angularFireStore
-              .collection('games')
-              .doc(action.)
-              .collection<Partial<PlayerInterface>>('players').add(
-                {
-                  id: userId!,
-                  name: action.name
-                });
-          } else {
-            console.log('this game room does not exits');
-          }
-        });*/
   }
 
 
@@ -198,6 +126,31 @@ export class PlayerState implements NgxsOnInit {
     });
   }
 
+  @Action(UpdateAlbumId)
+  updateAlbumId(context: StateContext<PlayerStateModel>, action: UpdateAlbumId): void {
+    this.store.selectSnapshot(PlayerState.players).forEach(player => {
+      this.angularFireStore
+        .collection('rooms')
+        .doc(this.store.selectSnapshot(RoomState.roomId))
+        .collection<Partial<PlayerInterface>>('players')
+        .doc(player.id).update({
+          currentAlbumId: this.getNextCurrentAlbumById(player.playerId),
+        });
+    });
+  }
+
+  getNextCurrentAlbumById(playerId): number {
+    let albumId;
+    this.store.selectSnapshot(PlayerState.players).forEach(player => {
+      if (player.playerId === playerId) { albumId = player.currentAlbumId; }
+    });
+    if (albumId < this.store.selectSnapshot(PlayerState.playerCount) - 1) {
+      albumId++;
+    } else {
+      albumId = 0;
+    }
+    return albumId;
+  }
 
 
   @Action(AddText)
@@ -215,14 +168,4 @@ export class PlayerState implements NgxsOnInit {
         }
       );
   }
-
-
-
-
-
-
-
-
-
-
 }

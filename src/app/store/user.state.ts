@@ -29,8 +29,8 @@ export class UserState implements NgxsOnInit {
   }
 
   ngxsOnInit(context?: StateContext<UserStateModel>): void {
-    // const id = uuid();
-    // context?.dispatch(new Changed(id));
+    const id = uuid();
+    context?.dispatch(new SetMyUser(id));
   }
 
   @Action(SetMyUser)

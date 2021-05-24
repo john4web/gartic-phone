@@ -5,12 +5,14 @@ import { Store } from '@ngxs/store';
 import { UserChanged } from 'src/app/store/auth.actions';
 import { ChangeImage } from 'src/app/store/image.actions';
 import { ImageState } from 'src/app/store/image.state';
-import { AddPlayer } from 'src/app/store/player.actions';
+import { AddPlayer, GetPlayersFromFirestore } from 'src/app/store/player.actions';
 import { CreateRoom, GetRoomFromFirestore } from 'src/app/store/room.actions';
 import firebase from 'firebase';
 import User = firebase.User;
 import { AuthState } from 'src/app/store/auth.state';
-import { PlayerInterface } from 'src/app/store/player.state';
+import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
+import { UserState } from 'src/app/store/user.state';
+import { switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -30,21 +32,33 @@ export class HomeComponent implements OnInit {
 
   createRoom(): void {
     this.store.dispatch(new CreateRoom(this.userName, this.imageFile));
+    this.store.dispatch(new GetPlayersFromFirestore(this.store.selectSnapshot(UserState.userId)));
     this.router.navigate(['home/lobby']);
   }
 
   joinRoom(): void {
 
     this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
+    this.store.dispatch(new GetPlayersFromFirestore(this.pastedRoomID));
 
-    const newPlayer: PlayerInterface = {
-      id: '',
-      name: this.userName,
-      isHost: false,
-      image: this.imageFile
-    };
-    this.store.dispatch(new AddPlayer(this.pastedRoomID, newPlayer));
-    this.router.navigate(['home/lobby']);
+    // Richtiger kack
+    this.store.select(PlayerState.playerCount).pipe(
+      takeWhile(count => typeof count === 'undefined', true)
+    ).subscribe((count) => {
+      if (typeof count !== 'undefined') {
+        const newPlayer: PlayerInterface = {
+          id: this.store.selectSnapshot(UserState.userId),
+          playerId: count,
+          name: this.userName,
+          isHost: false,
+          image: this.imageFile,
+          currentAlbumId: count,
+        };
+        this.store.dispatch(new AddPlayer(this.pastedRoomID, newPlayer));
+        this.router.navigate(['home/lobby']);
+      }
+    });
+
 
     /*
     this.store.dispatch(new UserUpdate(this.pastedRoomID));

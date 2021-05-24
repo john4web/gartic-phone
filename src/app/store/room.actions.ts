@@ -29,3 +29,11 @@ export class ChangeRoomPage {
   constructor(public newPageNUmber: number) {
   }
 }
+
+export class UpdateRound {
+  static readonly type = '[Room] UpdateRound';
+
+  constructor() {
+  }
+}
+

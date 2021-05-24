@@ -1,1 +1,15 @@
-<p>write works!</p>
+<div class="pt-20">
+  <label for="pasted-room-id" class="block font-bold">Explain the image:</label>
+  <input
+  [(ngModel)]= "storyText"
+  name="pasted-room-id"
+  id="pasted-room-id"
+  type="text"
+  name="name"
+  class="shadow appearance-none border rounded w-100 py-2 px-3 text-grey-darker"
+  />
+  <button type="button" (click)="saveStoryText()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">OK</button>
+  <div *ngFor="let player of (players$ | async); trackBy: trackById">
+    <p *ngIf="player.id === (userId$|async)"> Write in Album {{player.currentAlbumId}} </p>
+  </div>
+</div>

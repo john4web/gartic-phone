@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AuthState } from './store/auth.state';
+import { UserState } from './store/user.state';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +11,5 @@ import { AuthState } from './store/auth.state';
 })
 export class AppComponent {
   title = 'gartic-phone';
-  @Select(AuthState.userId) authUserId$!: Observable<string>;
+  @Select(UserState.userId) authUserId$!: Observable<string>;
 }

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
 import { AuthState } from './auth.state';
 import { PlayerInterface, PlayerState, PlayerStateModel } from './player.state';
-import { ChangeRoomPage, CreateRoom, GetRoomFromFirestore, SetRoom } from './room.actions';
+import { ChangeRoomPage, CreateRoom, GetRoomFromFirestore, SetRoom, UpdateRound } from './room.actions';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { AddPlayer } from './player.actions';
 import { ImageState } from './image.state';
@@ -14,6 +14,7 @@ export interface RoomInterface {
   id: string;
   page: number;
   createdAt: Date;
+  round: number;
 }
 
 export interface RoomStateModel {
@@ -43,7 +44,12 @@ export class RoomState implements NgxsOnInit {
     return state.room.id || null;
   }
 
-  constructor(private angularAuth: AngularFireAuth, private router: Router, private angularFireStore: AngularFirestore, private store: Store, private route: ActivatedRoute) {
+  @Selector()
+  static round(state: RoomStateModel): number {
+    return state.room.round;
+  }
+
+  constructor(private angularAuth: AngularFireAuth, private router: Router, private angularFireStore: AngularFirestore, private store: Store, private route: ActivatedRoute, private ngZone: NgZone) {
 
   }
 
@@ -54,53 +60,44 @@ export class RoomState implements NgxsOnInit {
 
   @Action(CreateRoom)
   createRoom(context: StateContext<RoomStateModel>, action: CreateRoom): void {
+    const authID = this.store.selectSnapshot(UserState.userId);
 
-    this.angularAuth.signOut();
-    this.angularAuth.signInAnonymously().then((userCredential) => {
+    this.angularFireStore
+      .collection<RoomInterface>('rooms')
+      .doc(authID).set({
+        id: authID,
+        page: 0,
+        createdAt: new Date(),
+        round: 0,
+      })
+      .then(() => {
+        console.log('done');
 
-      const authID = userCredential.user.uid;
+      }).then(() => {
 
-      this.angularFireStore
-        .collection<RoomInterface>('rooms')
-        .doc(authID).set({
-          id: authID,
-          page: 0,
-          createdAt: new Date()
-        })
-        .then(() => {
-          console.log('done');
+        // gets the room from firestore and syncs it to the ngxs store
+        this.store.dispatch(new GetRoomFromFirestore(authID));
 
-        }).then(() => {
+        // adding the host as a new player to the room
 
-          // gets the room from firestore and syncs it to the ngxs store
-          this.store.dispatch(new GetRoomFromFirestore(authID));
+        const newPlayer: PlayerInterface = {
+          id: this.store.selectSnapshot(UserState.userId),
+          playerId: 0,
+          name: action.hostName,
+          isHost: true,
+          image: action.imagePath,
+          currentAlbumId: 0
+        };
 
-          // adding the host as a new player to the room
+        this.store.dispatch(new AddPlayer(authID, newPlayer));
 
-          const newPlayer: PlayerInterface = {
-            id: '',
-            name: action.hostName,
-            isHost: true,
-            image: action.imagePath
-
-          };
-
-          this.store.dispatch(new AddPlayer(authID, newPlayer));
-
-        });
+      });
 
 
 
 
+    // add the host as a player
 
-
-      // add the host as a player
-
-
-
-
-
-    });
     /* const authID = this.store.selectSnapshot(AuthState.userId);
 
      this.angularFireStore.collection('rooms').doc(authID).set({}).then(() => {
@@ -143,7 +140,6 @@ export class RoomState implements NgxsOnInit {
           });
       });
 
-
   }
 
 
@@ -158,8 +154,24 @@ export class RoomState implements NgxsOnInit {
       .doc(roomId).update({
         page: action.newPageNUmber
       });
+  }
 
+  @Action(UpdateRound)
+  updateRound(context: StateContext<RoomStateModel>, action: UpdateRound): void {
 
+    const roomId = this.store.selectSnapshot(RoomState.roomId);
+    const newRound = this.store.selectSnapshot(RoomState.round) + 1;
+    const playerCount = this.store.selectSnapshot(PlayerState.playerCount);
+
+    if (newRound === playerCount) {
+      this.store.dispatch(new ChangeRoomPage(2));
+    } else {
+      this.angularFireStore
+        .collection<RoomInterface>('rooms')
+        .doc(roomId).update({
+          round: newRound,
+        });
+    }
 
   }
 
@@ -179,18 +191,37 @@ export class RoomState implements NgxsOnInit {
 
 
     // change router according to the page field in the room state
+    /*
     switch (action.room.page) {
       case 1:
         this.router.navigate(['/game']);
         break;
-      case 2:
-        this.router.navigate(['/draw']);
-        break;
-      case 3:
-        this.router.navigate(['/write']);
-        break;
-
+    case 2:
+      this.router.navigate(['/draw']);
+      break;
+    case 3:
+      this.router.navigate(['/write']);
+      break;
     }
+      */
+
+    if (action.room.page === 1 && action.room.round === 0) {
+      this.ngZone.run(() => this.router.navigate(['/game']));
+    }
+    else if (action.room.page === 1) {
+      if (action.room.round % 2) {
+        this.ngZone.run(() => this.router.navigate(['/game/write']));
+      } else {
+        this.ngZone.run(() => this.router.navigate(['/game/draw']));
+      }
+    }
+    if (action.room.page === 2) {
+      this.ngZone.run(() => this.router.navigate(['/game/book']));
+    }
+
+
+
+
 
 
   }

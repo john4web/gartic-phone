@@ -1,9 +1,9 @@
 import { AlbumInterface } from './album.state';
 
-export class AddStoryText {
-  static readonly type = '[Album] AddStoryText';
+export class AddContent {
+  static readonly type = '[Album] AddContent';
 
-  constructor(public storyText: string) {
+  constructor(public content: string) {
   }
 }
 

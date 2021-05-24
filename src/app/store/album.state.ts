@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import { v4 as uuid } from 'uuid';
 import User = firebase.User;
 import { SetMyUser } from './user.actions';
-import { AddStoryText, SetAlbum } from './album.action';
+import { AddContent, SetAlbum } from './album.action';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { RoomState } from './room.state';
 import { PlayerInterface } from './player.state';
@@ -14,7 +14,8 @@ import { of } from 'rxjs';
 
 
 export interface AlbumInterface {
-  storyStartText: string;
+  order: number;
+  content: string;
 }
 
 
@@ -54,8 +55,8 @@ export class AlbumState implements NgxsOnInit {
       });
     }*/
 
-  @Action(AddStoryText)
-  addStoryText(context: StateContext<AlbumStateModel>, action: AddStoryText): void {
+  @Action(AddContent)
+  addStoryText(context: StateContext<AlbumStateModel>, action: AddContent): void {
 
     const roomID = this.store.selectSnapshot(RoomState.roomId);
     const userID = this.store.selectSnapshot(UserState.userId);
@@ -66,7 +67,7 @@ export class AlbumState implements NgxsOnInit {
       .collection<Partial<PlayerInterface>>('players')
       .doc(userID)
       .collection('album')
-      .add({ storyStartText: action.storyText });
+      .add({ content: action.content });
 
 
 

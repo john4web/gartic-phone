@@ -20,7 +20,7 @@ export class LobbyComponent implements OnInit {
   constructor(private store: Store, private router: Router, private route: ActivatedRoute) { }
 
 
-  @Select(AuthState.userId) authUserId$: Observable<string>;
+  @Select(UserState.userId) authUserId$: Observable<string>;
   @Select(RoomState.roomId) roomId$: Observable<string>;
 
   showButton: boolean;
@@ -44,9 +44,6 @@ export class LobbyComponent implements OnInit {
   startGame(): void {
 
     this.store.dispatch(new ChangeRoomPage(1));
-
-
-    // this.router.navigate(['/game']);
   }
 
 }
