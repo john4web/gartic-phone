@@ -48,11 +48,11 @@ export class HomeComponent implements OnInit {
       if (typeof count !== 'undefined') {
         const newPlayer: PlayerInterface = {
           id: this.store.selectSnapshot(UserState.userId),
-          playerId: count,
+          playerId: 0,
           name: this.userName,
           isHost: false,
           image: this.imageFile,
-          currentAlbumId: count,
+          currentAlbumId: 0,
         };
         this.store.dispatch(new AddPlayer(this.pastedRoomID, newPlayer));
         this.router.navigate(['home/lobby']);

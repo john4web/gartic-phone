@@ -1,4 +1,13 @@
-import { AlbumInterface } from './album.state';
+import { Album, AlbumStateModel } from './album.state';
+
+
+export class InitAlbum {
+  static readonly type = '[Album] InitAblum';
+
+  constructor(public playerId: number) {
+  }
+}
+
 
 export class AddContent {
   static readonly type = '[Album] AddContent';
@@ -10,6 +19,21 @@ export class AddContent {
 export class SetAlbum {
   static readonly type = '[Album] SetAlbum';
 
-  constructor(public album: AlbumInterface[]) {
+  constructor(public album: Album, public playerId: number) {
   }
 }
+
+export class SetupAlbums {
+  static readonly type = '[Album] SetupAlbums';
+
+  constructor(public albums: Album[]) {
+  }
+}
+
+export class SetupAlbum {
+  static readonly type = '[Album] SetupAlbum';
+
+  constructor() {
+  }
+}
+
