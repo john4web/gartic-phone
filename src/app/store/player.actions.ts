@@ -28,6 +28,13 @@ export class UpdateAlbumId {
   }
 }
 
+export class UpdatePlayerIDs {
+  static readonly type = '[Players] UpdatePlayerIDs';
+
+  constructor() {
+  }
+}
+
 export class GetCurrentAlbumById {
   static readonly type = '[Player] getAlbumById';
   constructor(public playerId: number) {

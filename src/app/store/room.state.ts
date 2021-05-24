@@ -176,12 +176,6 @@ export class RoomState implements NgxsOnInit {
   }
 
 
-
-
-
-
-
-
   // sets the room in ngxs store
   @Action(SetRoom)
   setRoom(context: StateContext<RoomStateModel>, action: SetRoom): void {

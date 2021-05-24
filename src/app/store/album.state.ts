@@ -4,23 +4,32 @@ import firebase from 'firebase';
 import { v4 as uuid } from 'uuid';
 import User = firebase.User;
 import { SetMyUser } from './user.actions';
-import { AddContent, SetAlbum } from './album.action';
+import { AddContent, SetAlbum, SetupAlbum, SetupAlbums } from './album.action';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { RoomState } from './room.state';
-import { PlayerInterface } from './player.state';
+import { RoomInterface, RoomState } from './room.state';
+import { PlayerInterface, PlayerState } from './player.state';
 import { UserState } from './user.state';
 import { switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 
-export interface AlbumInterface {
-  order: number;
+export interface AlbumItemInterface {
   content: string;
 }
 
+export interface Album {
+  playerId: number;
+  album: AlbumItemInterface[];
+}
 
 export interface AlbumStateModel {
-  user: AlbumInterface;
+  albums: Album[];
+}
+
+function getDefaultState(): AlbumStateModel {
+  return {
+    albums: [],
+  };
 }
 
 @State<AlbumStateModel>({
@@ -29,6 +38,11 @@ export interface AlbumStateModel {
 
 @Injectable()
 export class AlbumState implements NgxsOnInit {
+
+  @Selector()
+  static albums(state: AlbumStateModel): Album[] {
+    return state.albums;
+  }
 
   constructor(private angularFireStore: AngularFirestore, private store: Store) {
   }
@@ -43,37 +57,114 @@ export class AlbumState implements NgxsOnInit {
 
     // Todo: Listen on Album Changes in firestore
 
-
-
   }
 
-  /*  @Action(SetAlbum)
-    setMyUser(context: StateContext<UserStateModel>, action: SetMyUser): void {
-      // write the user, that the action contains, to the state
-      context.patchState({
-        user: action.userID,
-      });
-    }*/
+  @Action(SetupAlbum)
+  setupAlbum(context: StateContext<AlbumStateModel>, action: SetupAlbum): void {
+    const players = this.store.selectSnapshot(PlayerState.players);
+    const newAlbums: Album[] = [];
+    players.forEach(player => {
+      const album: Album = {
+        playerId: player.playerId,
+        album: [],
+      };
+      newAlbums.push(album);
+    });
+    this.store.dispatch(new SetupAlbums(newAlbums));
+
+    players.forEach(player => {
+      this.angularFireStore
+        .collection<RoomInterface>('rooms')
+        .doc(this.store.selectSnapshot(RoomState.roomId))
+        .collection('players')
+        .doc(player.id)
+        .collection<AlbumItemInterface>('album')
+        .doc(this.store.selectSnapshot(RoomState.round).toString()).set({
+          content: ''
+        }).then(() => {
+          this.angularFireStore
+            .collection<RoomInterface>('rooms')
+            .doc(this.store.selectSnapshot(RoomState.roomId))
+            .collection('players')
+            .doc(player.id)
+            .collection('album')
+            .get().subscribe(() => {
+              this.angularFireStore
+                .collection<RoomInterface>('rooms')
+                .doc(this.store.selectSnapshot(RoomState.roomId))
+                .collection('players')
+                .doc(player.id)
+                .collection<AlbumItemInterface>('album')
+                .valueChanges({
+                })
+                .pipe(
+                  tap((thisAlbum) => {
+                    const newAlbum: Album = {
+                      playerId: player.playerId,
+                      album: thisAlbum,
+                    };
+                    context?.dispatch(new SetAlbum(newAlbum, player.playerId));
+                  })
+                )
+                .subscribe();
+            });
+        });
+    });
+  }
+
+  @Action(SetupAlbums)
+  setAlbums(context: StateContext<AlbumStateModel>, action: SetupAlbums): void {
+    context.patchState({
+      albums: action.albums,
+    });
+  }
+
+
+  @Action(SetAlbum)
+  setAlbum(context: StateContext<AlbumStateModel>, action: SetAlbum): void {
+    const newAlbums = this.store.selectSnapshot(AlbumState.albums);
+    // newAlbums[action.playerId] = action.album;
+    console.log(newAlbums);
+    context.patchState({
+      albums: newAlbums,
+    });
+  }
+
 
   @Action(AddContent)
   addStoryText(context: StateContext<AlbumStateModel>, action: AddContent): void {
 
     const roomID = this.store.selectSnapshot(RoomState.roomId);
-    const userID = this.store.selectSnapshot(UserState.userId);
+    const thisUserID = this.store.selectSnapshot(UserState.userId);
+
+    // check where is the current AlbumID
+    const currentAlbumId = this.getCurrentAlbumID(thisUserID);
+    // get the according user
+    const userID = this.getUserId(currentAlbumId);
 
     this.angularFireStore
       .collection('rooms')
       .doc(roomID)
       .collection<Partial<PlayerInterface>>('players')
-      .doc(userID)
+      .doc(userID.toString())
       .collection('album')
-      .add({ content: action.content });
+      .doc(this.store.selectSnapshot(RoomState.round).toString())
+      .set({ content: action.content });
+  }
 
+  getUserId(currentAlbumId): number {
+    let userId;
+    this.store.selectSnapshot(PlayerState.players).forEach(player => {
+      if (player.playerId === currentAlbumId) { userId = player.id; }
+    });
+    return userId;
+  }
 
-
-
-
-
-
+  getCurrentAlbumID(id): number {
+    let albumId;
+    this.store.selectSnapshot(PlayerState.players).forEach(player => {
+      if (player.id === id) { albumId = player.currentAlbumId; }
+    });
+    return albumId;
   }
 }

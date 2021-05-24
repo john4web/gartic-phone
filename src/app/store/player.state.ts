@@ -3,10 +3,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
-import { AlbumInterface } from './album.state';
 import { UserChanged } from './auth.actions';
 import { AuthState } from './auth.state';
-import { AddPlayer, AddText, GetCurrentAlbumById, GetPlayersFromFirestore, SetPlayers, UpdateAlbumId } from './player.actions';
+import { AddPlayer, AddText, GetCurrentAlbumById, GetPlayersFromFirestore, SetPlayers, UpdateAlbumId, UpdatePlayerIDs } from './player.actions';
 import { SetRoom } from './room.actions';
 import { RoomInterface, RoomState } from './room.state';
 import { SetMyUser } from './user.actions';
@@ -116,6 +115,23 @@ export class PlayerState implements NgxsOnInit {
           )
           .subscribe();
       });
+  }
+
+  @Action(UpdatePlayerIDs)
+  updatePlayerIDs(context: StateContext<PlayerStateModel>, action: UpdatePlayerIDs): void {
+    let count = 0;
+    this.store.selectSnapshot(PlayerState.players).forEach(player => {
+      this.angularFireStore
+        .collection<RoomInterface>('rooms')
+        .doc(this.store.selectSnapshot(RoomState.roomId))
+        .collection('players')
+        .doc<Partial<PlayerInterface>>(player.id)
+        .update({
+          playerId: count,
+          currentAlbumId: count
+        });
+      count++;
+    });
   }
 
 
