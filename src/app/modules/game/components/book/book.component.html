@@ -1,9 +1,14 @@
 <div>
-<p>book works!</p>
-<div *ngFor="let album of (albums$ | async); trackBy: trackById" >
-  <div *ngFor="let albumitem of album.album; let i = index" >
-    <img [src]="albumitem.content" alt="" *ngIf="i%2!==0">
-    <p *ngIf="i%2===0"> {{albumitem.content}}</p>
+<div *ngFor="let album of (albums$ | async); trackBy: trackById; let j = index" >
+  <div *ngIf="(currentAlbumIndex$ | async) === j ">
+    <p> youre are watching {{album.playerName}}'s album</p>
+    <br>
+    <div *ngFor="let albumitem of album.album; let i = index" >
+      <img [src]="albumitem.content" alt="" *ngIf="i%2!==0">
+      <p *ngIf="i%2===0"> {{albumitem.content}}</p>
+    </div>
   </div>
 </div>
+<button *ngIf="(roomId$ | async) === (userId$ | async) && (currentAlbumIndex$ | async)+1 < (playerCount$ |async)" type="button" (click)="nextAlbum()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Next Album</button>
+<button *ngIf="(currentAlbumIndex$ | async)+1 === (playerCount$ |async)" type="button" (click)="exitGame()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Exit Game</button>
 </div>

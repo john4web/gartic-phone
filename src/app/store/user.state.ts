@@ -29,15 +29,15 @@ export class UserState implements NgxsOnInit {
   }
 
   ngxsOnInit(context?: StateContext<UserStateModel>): void {
-    const id = uuid();
-    context?.dispatch(new SetMyUser(id));
+    context?.dispatch(new SetMyUser());
   }
 
   @Action(SetMyUser)
   setMyUser(context: StateContext<UserStateModel>, action: SetMyUser): void {
     // write the user, that the action contains, to the state
+    const id = uuid();
     context.patchState({
-      user: action.userID,
+      user: id,
     });
   }
 }

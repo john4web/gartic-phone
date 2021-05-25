@@ -19,6 +19,7 @@ export interface AlbumItemInterface {
 
 export interface Album {
   playerId: number;
+  playerName: string;
   album: AlbumItemInterface[];
 }
 
@@ -90,6 +91,7 @@ export class AlbumState implements NgxsOnInit {
     const newAlbums: Album[] = [];
     players.forEach(player => {
       const album: Album = {
+        playerName: player.name,
         playerId: player.playerId,
         album: [],
       };
@@ -125,6 +127,7 @@ export class AlbumState implements NgxsOnInit {
                 .pipe(
                   tap((thisAlbum) => {
                     const newAlbum: Album = {
+                      playerName: player.name,
                       playerId: player.playerId,
                       album: thisAlbum,
                     };

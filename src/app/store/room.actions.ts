@@ -14,6 +14,13 @@ export class GetRoomFromFirestore {
   }
 }
 
+export class DeleteRoom {
+  static readonly type = '[Room] DeleteRoom';
+
+  constructor() {
+  }
+}
+
 
 export class SetRoom {
   static readonly type = '[Room] SetRoom';
@@ -22,6 +29,11 @@ export class SetRoom {
   }
 }
 
+export class ChangeAlbumIndex {
+  static readonly type = '[Room] ChangeAlbumIndex';
+
+  constructor(public newIndex: number) { }
+}
 
 export class ChangeRoomPage {
   static readonly type = '[Room] ChangeRoomPage';

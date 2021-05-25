@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
 import { AuthState } from './auth.state';
 import { PlayerInterface, PlayerState, PlayerStateModel } from './player.state';
-import { ChangeRoomPage, CreateRoom, GetRoomFromFirestore, SetRoom, UpdateRound } from './room.actions';
+import { ChangeAlbumIndex, ChangeRoomPage, CreateRoom, DeleteRoom, GetRoomFromFirestore, SetRoom, UpdateRound } from './room.actions';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { AddPlayer } from './player.actions';
 import { ImageState } from './image.state';
@@ -16,6 +16,7 @@ export interface RoomInterface {
   page: number;
   createdAt: Date;
   round: number;
+  albumIndex: number;
 }
 
 export interface RoomStateModel {
@@ -50,6 +51,12 @@ export class RoomState implements NgxsOnInit {
     return state.room.round;
   }
 
+  @Selector()
+  static albumIndex(state: RoomStateModel): number {
+    return state.room.albumIndex;
+  }
+
+
   constructor(private angularAuth: AngularFireAuth, private router: Router, private angularFireStore: AngularFirestore, private store: Store, private route: ActivatedRoute, private ngZone: NgZone) {
 
   }
@@ -70,6 +77,7 @@ export class RoomState implements NgxsOnInit {
         page: 0,
         createdAt: new Date(),
         round: 0,
+        albumIndex: 0,
       })
       .then(() => {
         console.log('done');
@@ -157,6 +165,23 @@ export class RoomState implements NgxsOnInit {
       });
   }
 
+  @Action(ChangeAlbumIndex)
+  changeAlbumIndex(context: StateContext<RoomStateModel>, action: ChangeAlbumIndex): void {
+    const roomId = this.store.selectSnapshot(RoomState.roomId);
+    this.angularFireStore
+      .collection<RoomInterface>('rooms')
+      .doc(roomId).update({
+        albumIndex: action.newIndex
+      });
+  }
+
+  @Action(DeleteRoom)
+  deleteRoom(context: StateContext<RoomStateModel>, action: DeleteRoom) {
+    this.angularFireStore
+      .collection<RoomInterface>('rooms')
+      .doc(this.store.selectSnapshot(RoomState.roomId)).delete();
+  }
+
   @Action(UpdateRound)
   updateRound(context: StateContext<RoomStateModel>, action: UpdateRound): void {
 
@@ -198,6 +223,11 @@ export class RoomState implements NgxsOnInit {
     }
     if (action.room.page === 2) {
       this.ngZone.run(() => this.router.navigate(['/game/book']));
+    }
+
+    if (action.room.page === -1) {
+      // gameOver
+      this.ngZone.run(() => this.router.navigate(['/home']));
     }
 
   }

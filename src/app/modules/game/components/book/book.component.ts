@@ -1,7 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Component, NgZone, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Album, AlbumState } from 'src/app/store/album.state';
+import { UserChanged } from 'src/app/store/auth.actions';
+import { PlayerState } from 'src/app/store/player.state';
+import { ChangeAlbumIndex, ChangeRoomPage, DeleteRoom } from 'src/app/store/room.actions';
+import { RoomState } from 'src/app/store/room.state';
+import { SetMyUser } from 'src/app/store/user.actions';
+import { UserState } from 'src/app/store/user.state';
 
 @Component({
   selector: 'app-book',
@@ -9,6 +16,11 @@ import { Album, AlbumState } from 'src/app/store/album.state';
   styleUrls: ['./book.component.scss']
 })
 export class BookComponent implements OnInit {
+
+  @Select(UserState.userId) userId$: Observable<string>;
+  @Select(RoomState.roomId) roomId$: Observable<string>;
+  @Select(RoomState.albumIndex) currentAlbumIndex$: Observable<number>;
+  @Select(PlayerState.playerCount) playerCount$: Observable<number>;
 
   @Select(AlbumState.albums)
   albums$: Observable<Album[]>;
@@ -19,9 +31,29 @@ export class BookComponent implements OnInit {
   }
 
 
-  constructor() { }
+  constructor(private store: Store, private router: Router, private ngZone: NgZone) { }
 
   ngOnInit(): void {
+  }
+
+  nextAlbum(): void {
+    const currentIndex = this.store.selectSnapshot(RoomState.albumIndex);
+    this.store.dispatch(new ChangeAlbumIndex(currentIndex + 1));
+  }
+
+  exitGame(): void {
+    if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
+      this.store.dispatch(new ChangeRoomPage(-1)).toPromise().then(() => {
+        this.store.dispatch(new DeleteRoom()).toPromise().then(() => {
+          this.store.dispatch(new SetMyUser());
+        });
+      });
+    } else {
+      this.store.dispatch(new SetMyUser()).toPromise().then(() => {
+        this.ngZone.run(() => this.router.navigate(['/home']));
+      });
+    }
+
   }
 
 }
