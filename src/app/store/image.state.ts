@@ -54,7 +54,6 @@ export class ImageState implements NgxsOnInit {
     } else {
       newIndex = 0;
     }
-    console.log(this.store.selectSnapshot(ImageState.currentImage).imageName);
     context.patchState({
       image: {
         imageName: getImages()[newIndex],

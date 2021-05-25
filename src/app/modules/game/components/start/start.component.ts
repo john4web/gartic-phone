@@ -42,7 +42,6 @@ export class StartComponent implements OnInit {
 
     this.saveStoryText();
 
-    console.log(this.store.selectSnapshot(PlayerState.players));
   }
 
 

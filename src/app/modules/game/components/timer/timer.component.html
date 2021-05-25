@@ -1,2 +1,6 @@
-<p>timer works!</p>
-<div>{{timeLeft}}</div>
+<div id="countdown" [style]="'--animation: countdown ' + timerDuration + 's linear infinite forwards;'" *ngIf="showCountDown">
+  <div id="countdown-number" #countdownnumber>{{timeLeft}}</div>
+  <svg>
+    <circle r="18" cx="20" cy="20"></circle>
+  </svg>
+</div>

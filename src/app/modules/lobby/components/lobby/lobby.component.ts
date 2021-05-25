@@ -61,10 +61,8 @@ export class LobbyComponent implements OnInit {
     );
 
     this.showCopyClipboardMessage = true;
-    console.log(this.showCopyClipboardMessage);
     setTimeout(() => {
       this.showCopyClipboardMessage = false;
-      console.log(this.showCopyClipboardMessage);
     }, 3000);
 
 

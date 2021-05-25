@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { timer } from 'rxjs';
 import { UpdateAlbumId } from 'src/app/store/player.actions';
@@ -15,12 +15,15 @@ import { UserState } from 'src/app/store/user.state';
 export class TimerComponent implements OnInit {
 
   @Input() timerDuration;
+  @ViewChild('countdownnumber') countDownNumber: ElementRef | null = null;
 
   constructor(private store: Store) { }
 
-  timeLeft = 20;
+  timeLeft;
   interval;
   subscribeTimer: any;
+  showCountDown = true;
+
   ngOnInit(): void {
     this.timeLeft = this.timerDuration;
     this.startTimer();
@@ -29,7 +32,6 @@ export class TimerComponent implements OnInit {
   oberserableTimer(): void {
     const source = timer(1000, 2000);
     const abc = source.subscribe(val => {
-      console.log(val, '-');
       this.subscribeTimer = this.timeLeft - val;
     });
   }
@@ -40,9 +42,8 @@ export class TimerComponent implements OnInit {
         this.timeLeft--;
         // save remainingtime in fireStore
         // this.store.dispatch(new UpdateTimer(this.timeLeft));
-        console.log(this.timeLeft);
       } else {
-
+        this.showCountDown = false;
         if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
           this.store.dispatch(new UpdateAlbumId());
           this.store.dispatch(new UpdateRound());
@@ -54,17 +55,5 @@ export class TimerComponent implements OnInit {
       }
     }, 1000);
   }
-
-  pauseTimer(): void {
-    clearInterval(this.interval);
-  }
-
-
-
-
-
-
-
-
 
 }
