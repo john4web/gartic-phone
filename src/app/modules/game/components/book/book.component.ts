@@ -14,7 +14,6 @@ export class BookComponent implements OnInit {
   albums$: Observable<Album[]>;
 
   trackById(index: number, album: Album): number {
-    console.log('playerID: ' + album.playerId);
     return album.playerId;
   }
 

@@ -30,11 +30,14 @@ export class WriteComponent implements OnInit {
   players$: Observable<PlayerInterface[]>;
 
   trackById(index: number, player: PlayerInterface): string {
-    console.log('playerID: ' + player.id);
     return player.id;
   }
 
   ngOnInit(): void {
+    this.saveStoryText();
+    // if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
+    // this.timerService.startTimer();
+    // }
   }
 
 

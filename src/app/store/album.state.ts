@@ -149,7 +149,6 @@ export class AlbumState implements NgxsOnInit {
   setAlbum(context: StateContext<AlbumStateModel>, action: SetAlbum): void {
     const newAlbums = this.store.selectSnapshot(AlbumState.albums);
     newAlbums[action.playerId] = action.album;
-    console.log(newAlbums);
     context.patchState({
       albums: newAlbums,
     });

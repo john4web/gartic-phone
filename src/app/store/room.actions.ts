@@ -37,3 +37,9 @@ export class UpdateRound {
   }
 }
 
+export class UpdateTimer {
+  static readonly type = '[Room] UpdateTimer';
+
+  constructor(public newTime: number) {
+  }
+}

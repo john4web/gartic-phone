@@ -19,7 +19,6 @@ export class StartComponent implements OnInit {
 
   constructor(private store: Store) {
     this.players = this.store.selectSnapshot(PlayerState.players);
-    console.log(this.players);
   }
 
   storyText = '';
@@ -31,12 +30,18 @@ export class StartComponent implements OnInit {
   players$: Observable<PlayerInterface[]>;
 
   trackById(index: number, player: PlayerInterface): string {
-    console.log('playerID: ' + player.id);
     return player.id;
   }
 
 
   ngOnInit(): void {
+
+    // if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
+    // this.timerService.startTimer();
+    // }
+
+    this.saveStoryText();
+
     console.log(this.store.selectSnapshot(PlayerState.players));
   }
 

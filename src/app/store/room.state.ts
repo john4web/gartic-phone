@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
 import { AuthState } from './auth.state';
 import { PlayerInterface, PlayerState, PlayerStateModel } from './player.state';
-import { ChangeRoomPage, CreateRoom, GetRoomFromFirestore, SetRoom, UpdateRound } from './room.actions';
+import { ChangeRoomPage, CreateRoom, GetRoomFromFirestore, SetRoom, UpdateRound, UpdateTimer } from './room.actions';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { AddPlayer } from './player.actions';
 import { ImageState } from './image.state';
@@ -16,6 +16,7 @@ export interface RoomInterface {
   page: number;
   createdAt: Date;
   round: number;
+  time: number;
 }
 
 export interface RoomStateModel {
@@ -50,6 +51,11 @@ export class RoomState implements NgxsOnInit {
     return state.room.round;
   }
 
+  @Selector()
+  static timer(state: RoomStateModel): number {
+    return state.room.time;
+  }
+
   constructor(private angularAuth: AngularFireAuth, private router: Router, private angularFireStore: AngularFirestore, private store: Store, private route: ActivatedRoute, private ngZone: NgZone) {
 
   }
@@ -70,6 +76,7 @@ export class RoomState implements NgxsOnInit {
         page: 0,
         createdAt: new Date(),
         round: 0,
+        time: 20
       })
       .then(() => {
         console.log('done');
@@ -177,12 +184,29 @@ export class RoomState implements NgxsOnInit {
   }
 
 
+  @Action(UpdateTimer)
+  updateTimer(context: StateContext<RoomStateModel>, action: UpdateTimer): void {
+
+    const roomId = this.store.selectSnapshot(RoomState.roomId);
+
+    this.angularFireStore
+      .collection<RoomInterface>('rooms')
+      .doc(roomId).update({
+        time: action.newTime,
+      });
+
+  }
+
+
+
   // sets the room in ngxs store
   @Action(SetRoom)
   setRoom(context: StateContext<RoomStateModel>, action: SetRoom): void {
     context.patchState({
       room: action.room,
     });
+
+    const timer = this.store.selectSnapshot(RoomState.timer);
 
     if (action.room.page === 1 && action.room.round === 0) {
       this.store.dispatch(new SetupAlbum()).toPromise().then(() => {

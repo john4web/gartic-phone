@@ -32,7 +32,6 @@ export class LobbyComponent implements OnInit {
   players$: Observable<PlayerInterface[]>;
 
   trackById(index: number, player: PlayerInterface): string {
-    console.log('playerID: ' + player.id);
     return player.id;
   }
 
