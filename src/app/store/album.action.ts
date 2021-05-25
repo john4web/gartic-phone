@@ -23,6 +23,13 @@ export class SetAlbum {
   }
 }
 
+export class GetLastItem {
+  static readonly type = '[Album] GetAlbum';
+
+  constructor() {
+  }
+}
+
 export class SetupAlbums {
   static readonly type = '[Album] SetupAlbums';
 

@@ -9,6 +9,7 @@ import { AddPlayer } from './player.actions';
 import { ImageState } from './image.state';
 import { UserState } from './user.state';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SetupAlbum } from './album.action';
 
 export interface RoomInterface {
   id: string;
@@ -184,7 +185,9 @@ export class RoomState implements NgxsOnInit {
     });
 
     if (action.room.page === 1 && action.room.round === 0) {
-      this.ngZone.run(() => this.router.navigate(['/game']));
+      this.store.dispatch(new SetupAlbum()).toPromise().then(() => {
+        this.ngZone.run(() => this.router.navigate(['/game']));
+      });
     }
     else if (action.room.page === 1) {
       if (action.room.round % 2) {

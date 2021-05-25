@@ -46,7 +46,6 @@ export class LobbyComponent implements OnInit {
 
   startGame(): void {
     this.store.dispatch(new UpdatePlayerIDs()).toPromise().then(() => {
-      this.store.dispatch(new SetupAlbum());
       this.store.dispatch(new ChangeRoomPage(1));
     });
   }

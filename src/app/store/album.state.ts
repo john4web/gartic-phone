@@ -4,13 +4,13 @@ import firebase from 'firebase';
 import { v4 as uuid } from 'uuid';
 import User = firebase.User;
 import { SetMyUser } from './user.actions';
-import { AddContent, SetAlbum, SetupAlbum, SetupAlbums } from './album.action';
+import { AddContent, GetLastItem, SetAlbum, SetupAlbum, SetupAlbums } from './album.action';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { RoomInterface, RoomState } from './room.state';
 import { PlayerInterface, PlayerState } from './player.state';
 import { UserState } from './user.state';
 import { switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 
 
 export interface AlbumItemInterface {
@@ -39,13 +39,16 @@ function getDefaultState(): AlbumStateModel {
 @Injectable()
 export class AlbumState implements NgxsOnInit {
 
+  constructor(private angularFireStore: AngularFirestore, private store: Store) {
+  }
+
+
   @Selector()
   static albums(state: AlbumStateModel): Album[] {
     return state.albums;
   }
 
-  constructor(private angularFireStore: AngularFirestore, private store: Store) {
-  }
+
   /*
     // allows to easily access the users id
     @Selector()
@@ -123,11 +126,27 @@ export class AlbumState implements NgxsOnInit {
   @Action(SetAlbum)
   setAlbum(context: StateContext<AlbumStateModel>, action: SetAlbum): void {
     const newAlbums = this.store.selectSnapshot(AlbumState.albums);
-    // newAlbums[action.playerId] = action.album;
+    newAlbums[action.playerId] = action.album;
     console.log(newAlbums);
     context.patchState({
       albums: newAlbums,
     });
+  }
+
+  @Action(GetLastItem)
+  getLastItem(context: StateContext<string>, action: GetLastItem): any {
+    const round = this.store.selectSnapshot(RoomState.round);
+    const thisUserID = this.store.selectSnapshot(UserState.userId);
+    const currentAlbumId = this.getCurrentAlbumID(thisUserID);
+    const albums = this.store.selectSnapshot(AlbumState.albums);
+
+    let item: string;
+    albums.forEach(album => {
+      if (album.playerId === currentAlbumId) { item = album.album[round - 1].content; }
+    });
+
+    console.log(item);
+    return item;
   }
 
 
@@ -152,7 +171,7 @@ export class AlbumState implements NgxsOnInit {
       .set({ content: action.content });
   }
 
-  getUserId(currentAlbumId): number {
+  public getUserId(currentAlbumId): number {
     let userId;
     this.store.selectSnapshot(PlayerState.players).forEach(player => {
       if (player.playerId === currentAlbumId) { userId = player.id; }
@@ -160,7 +179,7 @@ export class AlbumState implements NgxsOnInit {
     return userId;
   }
 
-  getCurrentAlbumID(id): number {
+  public getCurrentAlbumID(id): number {
     let albumId;
     this.store.selectSnapshot(PlayerState.players).forEach(player => {
       if (player.id === id) { albumId = player.currentAlbumId; }

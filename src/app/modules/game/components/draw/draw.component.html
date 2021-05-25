@@ -1,4 +1,6 @@
 <div class="pt-20">
+  {{lastText$ | async}}
+
   <app-drawing-editor (image)="drawingChanged($event)"></app-drawing-editor>
 
   <div *ngFor="let player of (players$ | async); trackBy: trackById">

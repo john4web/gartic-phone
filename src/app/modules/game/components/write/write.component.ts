@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { AddContent } from 'src/app/store/album.action';
+import { AddContent, GetLastItem } from 'src/app/store/album.action';
 import { UpdateAlbumId } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UpdateRound } from 'src/app/store/room.actions';
@@ -16,8 +16,11 @@ import { UserState } from 'src/app/store/user.state';
 export class WriteComponent implements OnInit {
 
   storyText = '';
+  lastText = '';
 
-  constructor(private store: Store) { }
+  constructor(private store: Store) {
+    this.store.dispatch(new GetLastItem()).subscribe(text => { this.lastText = text; });
+  }
 
   @Select(UserState.userId) userId$: Observable<string>;
   @Select(RoomState.roomId) roomId$: Observable<string>;
