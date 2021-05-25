@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AddContent, GetLastItem } from 'src/app/store/album.action';
+import { AlbumState } from 'src/app/store/album.state';
 import { UpdateAlbumId } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UpdateRound } from 'src/app/store/room.actions';
@@ -15,7 +16,7 @@ import { UserState } from 'src/app/store/user.state';
 })
 export class DrawComponent implements OnInit {
 
-  lastText$: Observable<string>;
+  lastText: string;
   drawing = '';
 
   @Select(UserState.userId) userId$: Observable<string>;
@@ -29,16 +30,10 @@ export class DrawComponent implements OnInit {
   }
 
   constructor(private store: Store) {
-
+    this.lastText = AlbumState.getLastItem(store);
   }
 
   ngOnInit(): void {
-
-
-    this.lastText$ = this.store.dispatch(new GetLastItem());
-
-
-
 
 
   }

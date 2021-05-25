@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AddContent, GetLastItem } from 'src/app/store/album.action';
+import { AlbumState } from 'src/app/store/album.state';
 import { UpdateAlbumId } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UpdateRound } from 'src/app/store/room.actions';
@@ -15,11 +16,11 @@ import { UserState } from 'src/app/store/user.state';
 })
 export class WriteComponent implements OnInit {
 
-  storyText = '';
-  lastText = '';
+  describeDrawingText = '';
+  lastDrawing = '';
 
   constructor(private store: Store) {
-    this.store.dispatch(new GetLastItem()).subscribe(text => { this.lastText = text; });
+    this.lastDrawing = AlbumState.getLastItem(store);
   }
 
   @Select(UserState.userId) userId$: Observable<string>;
@@ -39,7 +40,7 @@ export class WriteComponent implements OnInit {
 
 
   saveStoryText() {
-    this.store.dispatch(new AddContent(this.storyText));
+    this.store.dispatch(new AddContent(this.describeDrawingText));
   }
 
   timerFinished() {

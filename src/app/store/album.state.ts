@@ -48,6 +48,28 @@ export class AlbumState implements NgxsOnInit {
     return state.albums;
   }
 
+  static getLastItem(store: Store): string {
+    const round = store.selectSnapshot(RoomState.round);
+    const thisUserID = store.selectSnapshot(UserState.userId);
+    const currentAlbumId = AlbumState.getCurrentAlbumID(store, thisUserID);
+    const albums = store.selectSnapshot(AlbumState.albums);
+
+    let item: string;
+    albums.forEach(album => {
+      if (album.playerId === currentAlbumId) { item = album.album[round - 1].content; }
+    });
+
+    return item;
+  }
+
+  static getCurrentAlbumID(store: Store, id): number {
+    let albumId;
+    store.selectSnapshot(PlayerState.players).forEach(player => {
+      if (player.id === id) { albumId = player.currentAlbumId; }
+    });
+    return albumId;
+  }
+
 
   /*
     // allows to easily access the users id
@@ -133,6 +155,7 @@ export class AlbumState implements NgxsOnInit {
     });
   }
 
+  /*
   @Action(GetLastItem)
   getLastItem(context: StateContext<string>, action: GetLastItem): any {
     const round = this.store.selectSnapshot(RoomState.round);
@@ -148,6 +171,7 @@ export class AlbumState implements NgxsOnInit {
     console.log(item);
     return item;
   }
+  */
 
 
   @Action(AddContent)
@@ -157,7 +181,7 @@ export class AlbumState implements NgxsOnInit {
     const thisUserID = this.store.selectSnapshot(UserState.userId);
 
     // check where is the current AlbumID
-    const currentAlbumId = this.getCurrentAlbumID(thisUserID);
+    const currentAlbumId = AlbumState.getCurrentAlbumID(this.store, thisUserID);
     // get the according user
     const userID = this.getUserId(currentAlbumId);
 
@@ -177,13 +201,5 @@ export class AlbumState implements NgxsOnInit {
       if (player.playerId === currentAlbumId) { userId = player.id; }
     });
     return userId;
-  }
-
-  public getCurrentAlbumID(id): number {
-    let albumId;
-    this.store.selectSnapshot(PlayerState.players).forEach(player => {
-      if (player.id === id) { albumId = player.currentAlbumId; }
-    });
-    return albumId;
   }
 }

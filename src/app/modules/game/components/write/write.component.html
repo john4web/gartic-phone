@@ -1,8 +1,8 @@
 <div class="pt-20">
-  {{lastText}}
+  <img [src]="lastDrawing" alt="">
   <label for="pasted-room-id" class="block font-bold">Explain the image:</label>
   <input
-  [(ngModel)]= "storyText"
+  [(ngModel)]= "describeDrawingText"
   name="pasted-room-id"
   id="pasted-room-id"
   type="text"
