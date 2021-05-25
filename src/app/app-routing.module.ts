@@ -17,8 +17,7 @@ const routes: Routes = [
   {
     path: 'game',
     loadChildren: () =>
-      import('./modules/game/game.module').then((m) => m.GameModule),
-    canActivate: [AuthGuardService]
+      import('./modules/game/game.module').then((m) => m.GameModule)
   },
   {
     path: '**',
