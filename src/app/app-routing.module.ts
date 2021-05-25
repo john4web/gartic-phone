@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './modules/lobby/components/not-found/not-found.component';
+import { AuthGuardService } from './services/auth-guard.service';
 
 const routes: Routes = [
   {
@@ -11,12 +12,13 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () =>
-      import('./modules/lobby/lobby.module').then((m) => m.LobbyModule),
+      import('./modules/lobby/lobby.module').then((m) => m.LobbyModule)
   },
   {
     path: 'game',
     loadChildren: () =>
       import('./modules/game/game.module').then((m) => m.GameModule),
+    canActivate: [AuthGuardService]
   },
   {
     path: '**',

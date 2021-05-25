@@ -209,6 +209,7 @@ export class RoomState implements NgxsOnInit {
       room: action.room,
     });
 
+
     if (action.room.page === 1 && action.room.round === 0) {
       this.store.dispatch(new SetupAlbum()).toPromise().then(() => {
         this.ngZone.run(() => this.router.navigate(['/game']));
