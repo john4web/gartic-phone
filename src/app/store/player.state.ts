@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, NgxsOnInit, Select, Selector, State, StateContext, Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { UserChanged } from './auth.actions';
@@ -50,6 +50,22 @@ export class PlayerState implements NgxsOnInit {
   @Selector()
   static playerCount(state: PlayerStateModel): number {
     return state.players.length;
+  }
+
+  static getPlayerById(store: Store, id: number): PlayerInterface {
+    let thisPlayer: PlayerInterface;
+    store.selectSnapshot(PlayerState.players).forEach(player => {
+      if (player.playerId === id) { thisPlayer = player; }
+    });
+    return thisPlayer;
+  }
+
+  static getPlayerByUserIndex(store: Store, id: string): PlayerInterface {
+    let thisPlayer: PlayerInterface;
+    store.selectSnapshot(PlayerState.players).forEach(player => {
+      if (player.id === id) { thisPlayer = player; }
+    });
+    return thisPlayer;
   }
 
 

@@ -15,12 +15,14 @@ import { from, Observable, of } from 'rxjs';
 
 export interface AlbumItemInterface {
   content: string;
+  playerImage: string;
 }
 
 export interface Album {
   playerId: number;
   playerName: string;
   album: AlbumItemInterface[];
+  playerImage: string;
 }
 
 export interface AlbumStateModel {
@@ -60,6 +62,7 @@ export class AlbumState implements NgxsOnInit {
       if (album.playerId === currentAlbumId) { item = album.album[round - 1].content; }
     });
 
+
     return item;
   }
 
@@ -94,6 +97,7 @@ export class AlbumState implements NgxsOnInit {
         playerName: player.name,
         playerId: player.playerId,
         album: [],
+        playerImage: player.image,
       };
       newAlbums.push(album);
     });
@@ -107,7 +111,8 @@ export class AlbumState implements NgxsOnInit {
         .doc(player.id)
         .collection<AlbumItemInterface>('album')
         .doc(this.store.selectSnapshot(RoomState.round).toString()).set({
-          content: ''
+          content: '',
+          playerImage: player.image,
         }).then(() => {
           this.angularFireStore
             .collection<RoomInterface>('rooms')
@@ -130,6 +135,7 @@ export class AlbumState implements NgxsOnInit {
                       playerName: player.name,
                       playerId: player.playerId,
                       album: thisAlbum,
+                      playerImage: player.image,
                     };
                     context?.dispatch(new SetAlbum(newAlbum, player.playerId));
                   })
@@ -185,16 +191,22 @@ export class AlbumState implements NgxsOnInit {
     // check where is the current AlbumID
     const currentAlbumId = AlbumState.getCurrentAlbumID(this.store, thisUserID);
     // get the according user
-    const userID = this.getUserId(currentAlbumId);
+    const user = PlayerState.getPlayerById(this.store, currentAlbumId);
+    const ownUser = PlayerState.getPlayerByUserIndex(this.store, thisUserID);
+
+    console.log(ownUser);
 
     this.angularFireStore
       .collection('rooms')
       .doc(roomID)
       .collection<Partial<PlayerInterface>>('players')
-      .doc(userID.toString())
-      .collection('album')
+      .doc(user.id.toString())
+      .collection<AlbumItemInterface>('album')
       .doc(this.store.selectSnapshot(RoomState.round).toString())
-      .set({ content: action.content });
+      .set({
+        content: action.content,
+        playerImage: ownUser.image,
+      });
   }
 
   public getUserId(currentAlbumId): number {
