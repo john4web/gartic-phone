@@ -86,7 +86,6 @@ export class PlayerState implements NgxsOnInit {
 
   @Action(AddPlayer)
   addPlayer(context: StateContext<PlayerStateModel>, action: AddPlayer): void {
-    console.log('roomId + ' + action.roomID);
     this.angularFireStore
       .collection('rooms')
       .doc(action.roomID)

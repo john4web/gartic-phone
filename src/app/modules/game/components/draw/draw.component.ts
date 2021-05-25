@@ -16,7 +16,7 @@ import { UserState } from 'src/app/store/user.state';
 })
 export class DrawComponent implements OnInit {
 
-  lastText: string;
+  lastText = '';
   drawing = '';
 
   @Select(UserState.userId) userId$: Observable<string>;
@@ -34,7 +34,10 @@ export class DrawComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    // if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
+    // this.timerService.startTimer();
+    // }
+    this.drawingChanged('');
 
   }
 

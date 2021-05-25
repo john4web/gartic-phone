@@ -9,6 +9,7 @@ import { BookComponent } from './components/book/book.component';
 import { FormsModule } from '@angular/forms';
 import { DrawingEditorModule } from '../drawing-editor/drawing-editor.module';
 import { DrawingEditorComponent } from '../drawing-editor/components/drawing-editor/drawing-editor.component';
+import { TimerComponent } from './components/timer/timer.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { DrawingEditorComponent } from '../drawing-editor/components/drawing-edi
     StartComponent,
     DrawComponent,
     WriteComponent,
-    BookComponent
+    BookComponent,
+    TimerComponent
   ],
   imports: [
     CommonModule,
