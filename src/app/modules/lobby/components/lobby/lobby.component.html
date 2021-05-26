@@ -9,13 +9,13 @@
       </p>
     </div>
 
-<div class="bg-gray-50">
+<div>
   <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
     <div>
-      <span class="block text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Players</span>
+      <span class="block text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl bg-indigo-400 pb-5 pt-5 text-center">Players</span>
       <ul class="bg-indigo-600 p-10">
 
-        <li *ngFor="let player of (players$ | async); trackBy: trackById" class="flex items-center justify-start p-5 m-5 bg-indigo-400 ">
+        <li *ngFor="let player of (players$ | async); trackBy: trackById" class="rounded-md flex items-center justify-start p-5 m-5 bg-indigo-400 ">
           <div class="px-5"><img [src]="player.image" alt="" class="w-20 h-20"></div>
           <div class="block text-1xl  tracking-tight text-gray-900 sm:text-2xl px-5">{{ player.name }}</div>
           <div *ngIf="player.isHost" class="px-5"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path d="M3 16l-3-10 7.104 4 4.896-8 4.896 8 7.104-4-3 10h-18zm0 2v4h18v-4h-18z"/></svg></div>
@@ -26,10 +26,10 @@
     </div>
 
     <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-      <div *ngIf="(roomId$ | async) === (authUserId$ | async)" class="inline-flex rounded-md shadow">
-        <button  (click)="startGame()" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Start Game</button>
-        <button (click)="copyRoomIDToClipboard()" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Invite a Friend!</button>
-        <div *ngIf="showCopyClipboardMessage">{{copyClipboardMessage}}</div>
+      <div *ngIf="(roomId$ | async) === (authUserId$ | async)" class="inline-flex flex-col rounded-md relative">
+        <div *ngIf="showCopyClipboardMessage" class="absolute -top-8 left-0 text-gray-500">{{copyClipboardMessage}}</div>
+        <button (click)="copyRoomIDToClipboard()" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 mb-5">Invite a Friend!</button>
+        <button  (click)="startGame()" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Start Game</button>
       </div>
 
       <div *ngIf="(roomId$ | async) !== (authUserId$ | async)" class="inline-flex rounded-md mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
