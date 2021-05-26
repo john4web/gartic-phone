@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { ObjectUnsubscribedError, Observable } from 'rxjs';
 import { AddText, UpdateAlbumId, UpdatePlayerIDs } from 'src/app/store/player.actions';
@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 import { AuthState } from 'src/app/store/auth.state';
 import { ChangeRoomPage } from 'src/app/store/room.actions';
 import { SetupAlbum } from 'src/app/store/album.action';
+import { SetMyUser } from 'src/app/store/user.actions';
 
 @Component({
   selector: 'app-lobby',
@@ -18,7 +19,7 @@ import { SetupAlbum } from 'src/app/store/album.action';
 })
 export class LobbyComponent implements OnInit {
 
-  constructor(private store: Store, private router: Router, private route: ActivatedRoute) { }
+  constructor(private store: Store, private router: Router, private route: ActivatedRoute, private ngZone: NgZone) { }
 
 
   @Select(UserState.userId) authUserId$: Observable<string>;
@@ -36,7 +37,10 @@ export class LobbyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    if (typeof this.store.selectSnapshot(RoomState.currentPage) === 'undefined' ||
+      this.store.selectSnapshot(RoomState.currentPage) !== 0) {
+      this.ngZone.run(() => this.router.navigate(['/home']));
+    }
   }
 
   addProperty(): void {

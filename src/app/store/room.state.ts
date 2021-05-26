@@ -56,6 +56,12 @@ export class RoomState implements NgxsOnInit {
     return state.room.albumIndex;
   }
 
+  @Selector()
+  static currentPage(state: RoomStateModel): number {
+    return state.room.page;
+  }
+
+
 
   constructor(private angularAuth: AngularFireAuth, private router: Router, private angularFireStore: AngularFirestore, private store: Store, private route: ActivatedRoute, private ngZone: NgZone) {
 

@@ -8,16 +8,17 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: HomeComponent
   },
   {
     path: 'lobby',
-    component: LobbyComponent,
+    component: LobbyComponent
   },
   {
     path: '**',
     component: NotFoundComponent,
   },
+
 
 
 ];

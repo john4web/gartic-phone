@@ -14,7 +14,7 @@ export interface ImageStateModel {
 }
 
 function getImages(): string[] {
-  return ['Divotkey.jpg', 'Dreiseitl.jpg', 'Haller.jpg', 'Volker.jpg'];
+  return ['../assets/images/Divotkey.jpg', '../assets/images/Dreiseitl.jpg', '../assets/images/Haller.jpg', '../assets/images/Volker.jpg'];
 }
 
 @State<ImageStateModel>({
@@ -61,4 +61,5 @@ export class ImageState implements NgxsOnInit {
       }
     });
   }
+
 }

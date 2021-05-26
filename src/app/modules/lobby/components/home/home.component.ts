@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { UserChanged } from 'src/app/store/auth.actions';
 import { ChangeImage } from 'src/app/store/image.actions';
-import { ImageState } from 'src/app/store/image.state';
+import { ImageInterface, ImageState } from 'src/app/store/image.state';
 import { AddPlayer, GetPlayersFromFirestore } from 'src/app/store/player.actions';
 import { CreateRoom, GetRoomFromFirestore } from 'src/app/store/room.actions';
 import firebase from 'firebase';
@@ -13,6 +13,8 @@ import { AuthState } from 'src/app/store/auth.state';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UserState } from 'src/app/store/user.state';
 import { switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { RoomState } from 'src/app/store/room.state';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -21,19 +23,30 @@ import { switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 export class HomeComponent implements OnInit {
   userName = '';
   pastedRoomID = '';
-  imageFile = '../assets/images/Divotkey.jpg';
+
+
+  @Select(ImageState.currentImage) imageFile$: Observable<ImageInterface>;
+
+  imageFile = '';
 
   constructor(private store: Store, private route: ActivatedRoute, private router: Router, private angularAuth: AngularFireAuth) {
   }
 
   ngOnInit(): void {
-
+    this.imageFile$.subscribe((a) => {
+      this.imageFile = a.imageName;
+    });
   }
 
   createRoom(): void {
-    this.store.dispatch(new CreateRoom(this.userName, this.imageFile));
-    this.store.dispatch(new GetPlayersFromFirestore(this.store.selectSnapshot(UserState.userId)));
-    this.router.navigate(['home/lobby']);
+    this.store.dispatch(new CreateRoom(this.userName, this.imageFile)).toPromise().then(() => {
+      this.store.dispatch(new GetPlayersFromFirestore(this.store.selectSnapshot(UserState.userId)));
+    });
+
+    this.store.select(RoomState.roomId).subscribe((roomId) => {
+      if (typeof roomId !== undefined) { this.router.navigate(['home/lobby']); }
+    });
+
   }
 
   joinRoom(): void {
@@ -57,6 +70,10 @@ export class HomeComponent implements OnInit {
         this.store.dispatch(new AddPlayer(this.pastedRoomID, newPlayer));
         this.router.navigate(['home/lobby']);
       }
+    });
+
+    this.store.select(RoomState.roomId).subscribe((roomId) => {
+      if (typeof roomId !== undefined) { this.router.navigate(['home/lobby']); }
     });
 
 
@@ -83,7 +100,6 @@ export class HomeComponent implements OnInit {
 
   change(): void {
     this.store.dispatch(new ChangeImage());
-    this.imageFile = '../assets/images/' + this.store.selectSnapshot(ImageState.currentImage).imageName;
   }
 
 }

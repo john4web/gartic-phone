@@ -33,6 +33,11 @@ export class BookComponent implements OnInit {
   constructor(private store: Store, private router: Router, private ngZone: NgZone) { }
 
   ngOnInit(): void {
+    if (this.store.selectSnapshot(RoomState.currentPage) !== 2) {
+      this.store.dispatch(new SetMyUser()).toPromise().then(() => {
+        this.ngZone.run(() => this.router.navigate(['/home']));
+      });
+    }
   }
 
   nextAlbum(): void {

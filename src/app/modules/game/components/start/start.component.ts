@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AddContent, SetAlbum } from 'src/app/store/album.action';
@@ -6,6 +7,7 @@ import { UpdateAlbumId } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UpdateRound } from 'src/app/store/room.actions';
 import { RoomState } from 'src/app/store/room.state';
+import { SetMyUser } from 'src/app/store/user.actions';
 import { UserState } from 'src/app/store/user.state';
 
 @Component({
@@ -17,7 +19,7 @@ export class StartComponent implements OnInit {
 
   players: PlayerInterface[];
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private ngZone: NgZone, private router: Router) {
     this.players = this.store.selectSnapshot(PlayerState.players);
   }
 
@@ -39,7 +41,12 @@ export class StartComponent implements OnInit {
     // if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
     // this.timerService.startTimer();
     // }
-
+    if (this.store.selectSnapshot(RoomState.currentPage) !== 1
+      || this.store.selectSnapshot(RoomState.round) !== 0) {
+      this.store.dispatch(new SetMyUser()).toPromise().then(() => {
+        this.ngZone.run(() => this.router.navigate(['/home']));
+      });
+    }
     this.saveStoryText();
 
   }
