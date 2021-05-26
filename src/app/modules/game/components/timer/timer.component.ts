@@ -1,7 +1,8 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { timer } from 'rxjs';
-import { UpdateAlbumId } from 'src/app/store/player.actions';
+import { Finished, UpdateAlbumId } from 'src/app/store/player.actions';
+import { PlayerState } from 'src/app/store/player.state';
 import { UpdateRound } from 'src/app/store/room.actions';
 import { RoomState } from 'src/app/store/room.state';
 import { UserState } from 'src/app/store/user.state';
@@ -46,6 +47,11 @@ export class TimerComponent implements OnInit, OnDestroy {
       } else {
         this.showCountDown = false;
         if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
+
+          this.store.selectSnapshot(PlayerState.players).forEach(player => {
+            this.store.dispatch(new Finished(player.id, false));
+          });
+
           this.store.dispatch(new UpdateAlbumId());
           this.store.dispatch(new UpdateRound());
         }

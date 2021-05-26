@@ -12,5 +12,6 @@
   </div>
 </div>
 <button *ngIf="(roomId$ | async) === (userId$ | async) && (currentAlbumIndex$ | async)+1 < (playerCount$ |async)" type="button" (click)="nextAlbum()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Next Album</button>
-<button *ngIf="(currentAlbumIndex$ | async)+1 === (playerCount$ |async)" type="button" (click)="exitGame()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Exit Game</button>
+<button *ngIf="(currentAlbumIndex$ | async)+1 === (playerCount$ |async) && (roomId$ | async) !== (userId$ | async)" type="button" (click)="exitGame()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Exit Game</button>
+<button *ngIf="(currentAlbumIndex$ | async)+1 === (playerCount$ |async) && (roomId$ | async) === (userId$ | async)" type="button" (click)="exitGame()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Exit Game and Delete Room</button>
 </div>
