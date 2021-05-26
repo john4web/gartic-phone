@@ -27,7 +27,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    const audio = new Audio();
+    audio.src = '../../../../assets/audio/welcome.mp3';
+    audio.load();
+    audio.play();
   }
 
   createRoom(): void {
