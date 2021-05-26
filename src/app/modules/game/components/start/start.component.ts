@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AddContent, SetAlbum } from 'src/app/store/album.action';
-import { UpdateAlbumId } from 'src/app/store/player.actions';
+import { Finished, UpdateAlbumId } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UpdateRound } from 'src/app/store/room.actions';
 import { RoomState } from 'src/app/store/room.state';
@@ -59,6 +59,10 @@ export class StartComponent implements OnInit {
   timerFinished() {
     this.store.dispatch(new UpdateAlbumId());
     this.store.dispatch(new UpdateRound());
+  }
+
+  finished() {
+    this.store.dispatch(new Finished(this.store.selectSnapshot(UserState.userId), true));
   }
 
 

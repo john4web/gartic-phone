@@ -101,7 +101,8 @@ export class RoomState implements NgxsOnInit {
           name: action.hostName,
           isHost: true,
           image: action.imagePath,
-          currentAlbumId: 0
+          currentAlbumId: 0,
+          finished: false,
         };
 
         this.store.dispatch(new AddPlayer(authID, newPlayer));

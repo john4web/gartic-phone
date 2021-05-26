@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { timer } from 'rxjs';
 import { UpdateAlbumId } from 'src/app/store/player.actions';
@@ -12,7 +12,7 @@ import { UserState } from 'src/app/store/user.state';
   templateUrl: './timer.component.html',
   styleUrls: ['./timer.component.scss']
 })
-export class TimerComponent implements OnInit {
+export class TimerComponent implements OnInit, OnDestroy {
 
   @Input() timerDuration;
   @ViewChild('countdownnumber') countDownNumber: ElementRef | null = null;
@@ -23,6 +23,7 @@ export class TimerComponent implements OnInit {
   interval;
   subscribeTimer: any;
   showCountDown = true;
+  stopTimer = false;
 
   ngOnInit(): void {
     this.timeLeft = this.timerDuration;
@@ -55,5 +56,10 @@ export class TimerComponent implements OnInit {
       }
     }, 1000);
   }
+
+  ngOnDestroy(): void {
+    clearInterval(this.interval);
+  }
+
 
 }

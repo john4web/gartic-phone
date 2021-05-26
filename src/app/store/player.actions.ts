@@ -47,3 +47,11 @@ export class AddText {
   constructor(public text: string) {
   }
 }
+
+export class Finished {
+  static readonly type = '[Player] Finished';
+
+  constructor(public id: string, public finished: boolean) {
+
+  }
+}

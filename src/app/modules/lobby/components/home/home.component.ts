@@ -66,6 +66,7 @@ export class HomeComponent implements OnInit {
           isHost: false,
           image: this.imageFile,
           currentAlbumId: 0,
+          finished: false
         };
         this.store.dispatch(new AddPlayer(this.pastedRoomID, newPlayer));
         this.router.navigate(['home/lobby']);

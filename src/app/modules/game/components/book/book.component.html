@@ -5,7 +5,7 @@
     <p> youre are watching {{album.playerName}}'s album</p>
     <br>
     <div *ngFor="let albumitem of album.album; let i = index" >
-      <div class="px-5"><img [src]="albumitem.playerImage" alt="" class="w-5 h-5"></div>
+      <div *ngIf="i!==0" class="px-5"><img [src]="albumitem.playerImage" alt="" class="w-5 h-5"></div>
       <img [src]="albumitem.content" alt="" *ngIf="i%2!==0">
       <p *ngIf="i%2===0"> {{albumitem.content}}</p>
     </div>

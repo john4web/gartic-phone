@@ -4,7 +4,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AddContent, GetLastItem } from 'src/app/store/album.action';
 import { AlbumState } from 'src/app/store/album.state';
-import { UpdateAlbumId } from 'src/app/store/player.actions';
+import { Finished, UpdateAlbumId } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UpdateRound } from 'src/app/store/room.actions';
 import { RoomState } from 'src/app/store/room.state';
@@ -52,6 +52,10 @@ export class DrawComponent implements OnInit {
   drawingChanged(newDrawing): void {
     this.drawing = newDrawing;
     this.store.dispatch(new AddContent(this.drawing));
+  }
+
+  finished() {
+    this.store.dispatch(new Finished(this.store.selectSnapshot(UserState.userId), true));
   }
 
   timerFinished(): void {

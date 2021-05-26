@@ -10,11 +10,10 @@
   class="shadow appearance-none border rounded w-100 py-2 px-3 text-grey-darker"
   (keyup)="saveStoryText()"
   />
-  <div *ngFor="let player of (players$ | async); trackBy: trackById">
-    <p *ngIf="player.id === (userId$|async)"> Write in Album {{player.currentAlbumId}} </p>
-  </div>
+  <button type="button" (click)="finished()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Set</button>
 
-  <button *ngIf="(roomId$ | async) === (userId$ | async)" type="button" (click)="timerFinished()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">TimerFinished</button>
+
+
 
   <app-timer [timerDuration]="20"></app-timer>
 

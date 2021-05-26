@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Select, Selector, State, StateContext, Store } from '@ngxs/store';
-import { of } from 'rxjs';
+import { of, timer } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { UserChanged } from './auth.actions';
 import { AuthState } from './auth.state';
-import { AddPlayer, AddText, GetCurrentAlbumById, GetPlayersFromFirestore, SetPlayers, UpdateAlbumId, UpdatePlayerIDs } from './player.actions';
-import { SetRoom } from './room.actions';
+import { AddPlayer, AddText, Finished, GetCurrentAlbumById, GetPlayersFromFirestore, SetPlayers, UpdateAlbumId, UpdatePlayerIDs } from './player.actions';
+import { SetRoom, UpdateRound } from './room.actions';
 import { RoomInterface, RoomState } from './room.state';
 import { SetMyUser } from './user.actions';
 import { UserState } from './user.state';
@@ -18,6 +18,7 @@ export interface PlayerInterface {
   isHost: boolean;
   image: string;
   currentAlbumId: number;
+  finished: boolean;
 }
 
 export interface PlayerStateModel {
@@ -155,6 +156,20 @@ export class PlayerState implements NgxsOnInit {
     context.patchState({
       players: action.players,
     });
+    if (this.store.selectSnapshot(RoomState.currentPage) === 1) {
+      let finishedCount = 0;
+      action.players.forEach(player => {
+        if (player.finished) { finishedCount++; }
+      });
+      if (finishedCount === action.players.length &&
+        this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
+        action.players.forEach(player => {
+          this.store.dispatch(new Finished(player.id, false));
+        });
+        this.store.dispatch(new UpdateAlbumId());
+        this.store.dispatch(new UpdateRound());
+      }
+    }
   }
 
   @Action(UpdateAlbumId)
@@ -181,6 +196,18 @@ export class PlayerState implements NgxsOnInit {
       albumId = 0;
     }
     return albumId;
+  }
+
+  @Action(Finished)
+  finished(context: StateContext<PlayerStateModel>, action: Finished): void {
+    this.angularFireStore
+      .collection('rooms')
+      .doc(this.store.selectSnapshot(RoomState.roomId))
+      .collection<Partial<PlayerInterface>>('players')
+      .doc(action.id)
+      .update({
+        finished: action.finished,
+      });
   }
 
 
