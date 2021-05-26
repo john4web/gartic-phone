@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   pastedRoomID = '';
   imageFile = '../assets/images/Divotkey.jpg';
 
+
   constructor(private store: Store, private route: ActivatedRoute, private router: Router, private angularAuth: AngularFireAuth) {
   }
 
@@ -41,7 +42,6 @@ export class HomeComponent implements OnInit {
     this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
     this.store.dispatch(new GetPlayersFromFirestore(this.pastedRoomID));
 
-    // Richtiger kack
     this.store.select(PlayerState.playerCount).pipe(
       takeWhile(count => typeof count === 'undefined', true)
     ).subscribe((count) => {
@@ -84,6 +84,14 @@ export class HomeComponent implements OnInit {
   change(): void {
     this.store.dispatch(new ChangeImage());
     this.imageFile = '../assets/images/' + this.store.selectSnapshot(ImageState.currentImage).imageName;
+  }
+
+  userNameFilled(): boolean {
+    return this.userName === '' ? false : true;
+  }
+
+  pastedRoomIdFilled(): boolean {
+    return this.pastedRoomID === '' ? false : true;
   }
 
 }
