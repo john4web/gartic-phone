@@ -49,10 +49,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     audio.load();
     this.store.dispatch(new CreateRoom(this.userName, this.imageFile)).toPromise().then(() => {
       this.store.dispatch(new GetPlayersFromFirestore(this.store.selectSnapshot(UserState.userId)));
-    });
-
-    this.store.select(RoomState.roomId).subscribe((roomId) => {
-      if (typeof roomId !== undefined) { this.router.navigate(['home/lobby']); }
+    }).then(() => {
+      this.store.select(RoomState.roomId).subscribe((roomId) => {
+        if (typeof roomId !== 'undefined') { this.router.navigate(['home/lobby']); }
+      });
     });
 
   }
