@@ -1,10 +1,10 @@
 <div>
   <div>
-    <button (click)="clearDrawings()">Clear Drawing</button>
+    <button (click)="clearDrawings()" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-gray-200 mb-4">❌ Clear Drawing</button>
   </div>
-  <canvas #canvas id="myCanvas" style="border:1px solid #000000; width: 100%;">
+  <canvas #canvas id="myCanvas" class="border-2 border-black w-full bg-white">
   </canvas>
-  <div>
-    <button (click)="currentColor = color.value" *ngFor="let color of colors; trackBy: trackByFn">{{color.name}}</button>
+  <div class="flex justify-around mt-4">
+    <button (click)="currentColor = color.value" *ngFor="let color of colors; trackBy: trackByFn" [style]="'background-color: ' + color.value + ';'" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-black">🖌️</button>
   </div>
 </div>

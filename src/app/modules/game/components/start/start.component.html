@@ -12,6 +12,6 @@
      (keyup)="saveStoryText()"
      />
      <button type="button" (click)="finished()" [disabled]="!storyTextIsFilled()" [ngClass]="{'opacity-50 cursor-not-allowed': !storyTextIsFilled()}" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-gray-200 ml-1">Done!</button>
-     <app-timer [timerDuration]="20"></app-timer>
+     <app-timer [timerDuration]="40"></app-timer>
   </div>
 </div>

@@ -1,9 +1,26 @@
-<div class="pt-20">
+<!--<div class="pt-20">
   {{lastText}}
 
   <app-drawing-editor (image)="drawingChanged($event)"></app-drawing-editor>
 
   <button type="button" (click)="finished()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Done!</button>
 
-  <app-timer [timerDuration]="40"></app-timer>
+  <app-timer [timerDuration]="600"></app-timer>
+</div>
+-->
+
+
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 flex items-center justify-center">
+  <div class="bg-indigo-600 rounded-md p-10 text-white w-full">
+     <span class="block text-3xl font-bold tracking-tight sm:text-3xl pb-10 text-center">Draw this Story!</span>
+     <p class="text-center text-xl font-bold mb-10">
+      {{lastText}}
+     </p>
+
+     <app-drawing-editor (image)="drawingChanged($event)"></app-drawing-editor>
+
+     <button type="button" (click)="finished()" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-gray-200 mt-10">Done!</button>
+
+     <app-timer [timerDuration]="80"></app-timer>
+  </div>
 </div>
