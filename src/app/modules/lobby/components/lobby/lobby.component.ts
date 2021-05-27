@@ -33,12 +33,10 @@ export class LobbyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /*
     if (typeof this.store.selectSnapshot(RoomState.currentPage) === 'undefined' ||
       this.store.selectSnapshot(RoomState.currentPage) !== 0) {
       this.ngZone.run(() => this.router.navigate(['/home']));
     }
-    */
   }
 
   addProperty(): void {
