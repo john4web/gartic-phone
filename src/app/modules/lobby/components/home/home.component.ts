@@ -32,21 +32,12 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     this.imageFile$.subscribe((a) => {
       this.imageFile = a.imageName;
     });
-    // // spielt es komischerweise 2 mal?
-    // const audio = new Audio();
-    // audio.autoplay = true;
-    // audio.src = '../../../../assets/audio/welcome.mp3';
-    // audio.load();
   }
 
   ngAfterViewChecked(): void {
   }
 
   createRoom(): void {
-    const audio = new Audio();
-    audio.autoplay = true;
-    audio.src = '../../../../assets/audio/host.mp3';
-    audio.load();
     this.store.dispatch(new CreateRoom(this.userName, this.imageFile)).toPromise().then(() => {
       this.store.dispatch(new GetPlayersFromFirestore(this.store.selectSnapshot(UserState.userId)));
     }).then(() => {
@@ -58,11 +49,6 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   }
 
   joinRoom(): void {
-    const audio = new Audio();
-    audio.autoplay = true;
-    audio.src = '../../../../assets/audio/client.mp3';
-    audio.load();
-
     this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
     this.store.dispatch(new GetPlayersFromFirestore(this.pastedRoomID));
 

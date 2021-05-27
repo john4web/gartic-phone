@@ -36,12 +36,7 @@ export class BookComponent implements OnInit {
       this.store.dispatch(new SetMyUser()).toPromise().then(() => {
         this.ngZone.run(() => this.router.navigate(['/home']));
       });
-    } /*else {
-      const audio = new Audio();
-      audio.autoplay = true;
-      audio.src = '../../../../assets/audio/album.mp3';
-      audio.load();
-    }*/
+    }
   }
 
   nextAlbum(): void {
