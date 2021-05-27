@@ -1,17 +1,30 @@
-<div>
-<div *ngFor="let album of (albums$ | async); trackBy: trackById; let j = index" >
-  <div *ngIf="(currentAlbumIndex$ | async) === j ">
-    <div class="px-5"><img [src]="album.playerImage" alt="" class="w-5 h-5"></div>
-    <p> youre are watching {{album.playerName}}'s album</p>
-    <br>
-    <div *ngFor="let albumitem of album.album; let i = index" >
-      <div *ngIf="i!==0" class="px-5"><img [src]="albumitem.playerImage" alt="" class="w-5 h-5"></div>
-      <img [src]="albumitem.content" alt="" *ngIf="i%2!==0">
-      <p *ngIf="i%2===0"> {{albumitem.content}}</p>
-    </div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div>
+     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-center">
+        <div>
+           <div *ngFor="let album of (albums$ | async); trackBy: trackById; let j = index" >
+              <div *ngIf="(currentAlbumIndex$ | async) === j ">
+                 <div class="flex justify-start items-center text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl bg-indigo-400 pb-5 pt-5 text-center">
+                    <div><img [src]="album.playerImage" alt="" class="w-20 h-20"></div>
+                    <div>{{album.playerName}}'s album</div>
+                 </div>
+                 <ul class="bg-indigo-600 p-10">
+                    <li *ngFor="let albumitem of album.album; let i = index" class="rounded-md flex items-center justify-start p-5 m-5 bg-indigo-400">
+                       <div *ngIf="i!==0">
+                          <img [src]="albumitem.playerImage" alt="" class="w-20 h-20">
+                       </div>
+                       <div>
+                          <img [src]="albumitem.content" alt="" *ngIf="i%2!==0" style="width: 753; height: 378;">
+                          <p *ngIf="i%2===0"> {{albumitem.content}}</p>
+                       </div>
+                    </li>
+                 </ul>
+              </div>
+           </div>
+           <button *ngIf="(roomId$ | async) === (userId$ | async) && (currentAlbumIndex$ | async)+1 < (playerCount$ |async)" type="button" (click)="nextAlbum()" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 mt-7">Next Album</button>
+           <button *ngIf="(currentAlbumIndex$ | async)+1 === (playerCount$ |async) && (roomId$ | async) !== (userId$ | async)" type="button" (click)="exitGame()" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 mt-7">Exit Game</button>
+           <button *ngIf="(currentAlbumIndex$ | async)+1 === (playerCount$ |async) && (roomId$ | async) === (userId$ | async)" type="button" (click)="exitGame()" class="shadow inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 mt-7">Exit Game and Delete Room</button>
+        </div>
+     </div>
   </div>
-</div>
-<button *ngIf="(roomId$ | async) === (userId$ | async) && (currentAlbumIndex$ | async)+1 < (playerCount$ |async)" type="button" (click)="nextAlbum()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Next Album</button>
-<button *ngIf="(currentAlbumIndex$ | async)+1 === (playerCount$ |async) && (roomId$ | async) !== (userId$ | async)" type="button" (click)="exitGame()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Exit Game</button>
-<button *ngIf="(currentAlbumIndex$ | async)+1 === (playerCount$ |async) && (roomId$ | async) === (userId$ | async)" type="button" (click)="exitGame()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Exit Game and Delete Room</button>
 </div>

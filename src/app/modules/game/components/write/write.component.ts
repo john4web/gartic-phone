@@ -52,18 +52,22 @@ export class WriteComponent implements OnInit {
   }
 
 
-  finished() {
+  finished(): void {
     this.store.dispatch(new Finished(this.store.selectSnapshot(UserState.userId), true));
   }
 
 
-  saveStoryText() {
+  saveStoryText(): void {
     this.store.dispatch(new AddContent(this.describeDrawingText));
   }
 
-  timerFinished() {
+  timerFinished(): void {
     this.store.dispatch(new UpdateAlbumId());
     this.store.dispatch(new UpdateRound());
+  }
+
+  describeDrawingTextIsFilled(): boolean {
+    return this.describeDrawingText === '' ? false : true;
   }
 
 }

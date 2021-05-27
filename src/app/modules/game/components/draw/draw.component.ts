@@ -54,7 +54,7 @@ export class DrawComponent implements OnInit {
     this.store.dispatch(new AddContent(this.drawing));
   }
 
-  finished() {
+  finished(): void {
     this.store.dispatch(new Finished(this.store.selectSnapshot(UserState.userId), true));
   }
 

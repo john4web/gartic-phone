@@ -52,20 +52,20 @@ export class StartComponent implements OnInit {
   }
 
 
-  saveStoryText() {
+  saveStoryText(): void {
     this.store.dispatch(new AddContent(this.storyText));
   }
 
-  timerFinished() {
+  timerFinished(): void {
     this.store.dispatch(new UpdateAlbumId());
     this.store.dispatch(new UpdateRound());
   }
 
-  finished() {
+  finished(): void {
     this.store.dispatch(new Finished(this.store.selectSnapshot(UserState.userId), true));
   }
 
-  storyTextIsFilled() {
+  storyTextIsFilled(): boolean {
     return this.storyText === '' ? false : true;
   }
 
