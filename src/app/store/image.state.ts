@@ -13,7 +13,7 @@ export interface ImageStateModel {
 }
 
 function getImages(): string[] {
-  return ['../assets/images/Divotkey.jpg', '../assets/images/Dreiseitl.jpg', '../assets/images/Haller.jpg', '../assets/images/Volker.jpg'];
+  return ['../assets/images/Santa1.jpeg', '../assets/images/Santa2.jpeg', '../assets/images/Santa3.jpeg', '../assets/images/Santa4.jpeg', '../assets/images/Santa5.jpeg', '../assets/images/Santa6.jpeg'];
 }
 
 @State<ImageStateModel>({

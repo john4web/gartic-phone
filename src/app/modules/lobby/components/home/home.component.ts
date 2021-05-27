@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
@@ -16,10 +16,9 @@ import { Observable } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewChecked {
   userName = '';
   pastedRoomID = '';
-
 
   @Select(ImageState.currentImage) imageFile$: Observable<ImageInterface>;
 
@@ -33,9 +32,23 @@ export class HomeComponent implements OnInit {
     this.imageFile$.subscribe((a) => {
       this.imageFile = a.imageName;
     });
+    // spielt es komischerweise 2 mal?
+    /*
+    const audio = new Audio();
+    audio.autoplay = true;
+    audio.src = '../../../../assets/audio/welcome.mp3';
+    audio.load();
+    */
+  }
+
+  ngAfterViewChecked(): void {
   }
 
   createRoom(): void {
+    const audio = new Audio();
+    audio.autoplay = true;
+    audio.src = '../../../../assets/audio/host.mp3';
+    audio.load();
     this.store.dispatch(new CreateRoom(this.userName, this.imageFile)).toPromise().then(() => {
       this.store.dispatch(new GetPlayersFromFirestore(this.store.selectSnapshot(UserState.userId)));
     });
@@ -47,6 +60,10 @@ export class HomeComponent implements OnInit {
   }
 
   joinRoom(): void {
+    const audio = new Audio();
+    audio.autoplay = true;
+    audio.src = '../../../../assets/audio/client.mp3';
+    audio.load();
 
     this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
     this.store.dispatch(new GetPlayersFromFirestore(this.pastedRoomID));

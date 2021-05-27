@@ -22,7 +22,9 @@ export class WriteComponent implements OnInit {
   lastDrawing = '';
 
   constructor(private store: Store, private ngZone: NgZone, private router: Router) {
-    this.lastDrawing = AlbumState.getLastItem(store);
+    if (typeof this.store.selectSnapshot(RoomState.roomId) !== 'undefined') {
+      this.lastDrawing = AlbumState.getLastItem(store);
+    }
   }
 
   @Select(UserState.userId) userId$: Observable<string>;
@@ -37,13 +39,18 @@ export class WriteComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.saveStoryText();
     if (this.store.selectSnapshot(RoomState.currentPage) !== 1
-      && this.store.selectSnapshot(RoomState.round) === 0
-      && this.store.selectSnapshot(RoomState.round) % 2 !== 0) {
+      || this.store.selectSnapshot(RoomState.round) === 0
+      || this.store.selectSnapshot(RoomState.round) % 2 !== 0) {
       this.store.dispatch(new SetMyUser()).toPromise().then(() => {
         this.ngZone.run(() => this.router.navigate(['/home']));
       });
+    } else {
+      this.saveStoryText();
+      const audio = new Audio();
+      audio.autoplay = true;
+      audio.src = '../../../../assets/audio/write.mp3';
+      audio.load();
     }
   }
 

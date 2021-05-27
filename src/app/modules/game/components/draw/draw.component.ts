@@ -32,7 +32,9 @@ export class DrawComponent implements OnInit {
   }
 
   constructor(private store: Store, private ngZone: NgZone, private router: Router) {
-    this.lastText = AlbumState.getLastItem(store);
+    if (typeof this.store.selectSnapshot(RoomState.roomId) !== 'undefined') {
+      this.lastText = AlbumState.getLastItem(store);
+    }
   }
 
   ngOnInit(): void {
@@ -41,8 +43,13 @@ export class DrawComponent implements OnInit {
       this.store.dispatch(new SetMyUser()).toPromise().then(() => {
         this.ngZone.run(() => this.router.navigate(['/home']));
       });
+    } else {
+      const audio = new Audio();
+      audio.autoplay = true;
+      audio.src = '../../../../assets/audio/draw.mp3';
+      audio.load();
+      this.drawingChanged('');
     }
-    this.drawingChanged('');
   }
 
   drawingChanged(newDrawing): void {

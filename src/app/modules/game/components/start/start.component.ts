@@ -43,7 +43,13 @@ export class StartComponent implements OnInit {
         this.ngZone.run(() => this.router.navigate(['/home']));
       });
     }
-    this.saveStoryText();
+    else {
+      this.saveStoryText();
+      const audio = new Audio();
+      audio.autoplay = true;
+      audio.src = '../../../../assets/audio/start.mp3';
+      audio.load();
+    }
   }
 
 
