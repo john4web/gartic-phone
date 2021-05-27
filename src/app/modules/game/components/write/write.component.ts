@@ -47,10 +47,10 @@ export class WriteComponent implements OnInit {
       });
     } else {
       this.saveStoryText();
-      const audio = new Audio();
-      audio.autoplay = true;
-      audio.src = '../../../../assets/audio/write.mp3';
-      audio.load();
+      // const audio = new Audio();
+      // audio.autoplay = true;
+      // audio.src = '../../../../assets/audio/write.mp3';
+      // audio.load();
     }
   }
 

@@ -32,11 +32,11 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     this.imageFile$.subscribe((a) => {
       this.imageFile = a.imageName;
     });
-    // spielt es komischerweise 2 mal?
-    const audio = new Audio();
-    audio.autoplay = true;
-    audio.src = '../../../../assets/audio/welcome.mp3';
-    audio.load();
+    // // spielt es komischerweise 2 mal?
+    // const audio = new Audio();
+    // audio.autoplay = true;
+    // audio.src = '../../../../assets/audio/welcome.mp3';
+    // audio.load();
   }
 
   ngAfterViewChecked(): void {

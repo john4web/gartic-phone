@@ -44,10 +44,10 @@ export class DrawComponent implements OnInit {
         this.ngZone.run(() => this.router.navigate(['/home']));
       });
     } else {
-      const audio = new Audio();
-      audio.autoplay = true;
-      audio.src = '../../../../assets/audio/draw.mp3';
-      audio.load();
+      // const audio = new Audio();
+      // audio.autoplay = true;
+      // audio.src = '../../../../assets/audio/draw.mp3';
+      // audio.load();
       this.drawingChanged('');
     }
   }
