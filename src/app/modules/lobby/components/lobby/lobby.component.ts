@@ -1,16 +1,12 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { ObjectUnsubscribedError, Observable } from 'rxjs';
-import { AddText, UpdateAlbumId, UpdatePlayerIDs } from 'src/app/store/player.actions';
+import { Observable } from 'rxjs';
+import { AddText, UpdatePlayerIDs } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { RoomState } from 'src/app/store/room.state';
 import { UserState } from 'src/app/store/user.state';
 import { ActivatedRoute, Router } from '@angular/router';
-import { v4 as uuid } from 'uuid';
-import { AuthState } from 'src/app/store/auth.state';
 import { ChangeRoomPage } from 'src/app/store/room.actions';
-import { SetupAlbum } from 'src/app/store/album.action';
-import { SetMyUser } from 'src/app/store/user.actions';
 
 @Component({
   selector: 'app-lobby',

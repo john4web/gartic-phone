@@ -2,7 +2,7 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { AddContent, GetLastItem } from 'src/app/store/album.action';
+import { AddContent } from 'src/app/store/album.action';
 import { AlbumState } from 'src/app/store/album.state';
 import { Finished, UpdateAlbumId } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
@@ -38,10 +38,6 @@ export class WriteComponent implements OnInit {
   ngOnInit(): void {
 
     this.saveStoryText();
-    // if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
-    // this.timerService.startTimer();
-    // }
-
     if (this.store.selectSnapshot(RoomState.currentPage) !== 1
       && this.store.selectSnapshot(RoomState.round) === 0
       && this.store.selectSnapshot(RoomState.round) % 2 !== 0) {

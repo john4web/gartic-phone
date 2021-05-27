@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Action, NgxsOnInit, Select, Selector, State, StateContext, Store } from '@ngxs/store';
-import { of, timer } from 'rxjs';
-import { filter, switchMap, tap } from 'rxjs/operators';
-import { UserChanged } from './auth.actions';
-import { AuthState } from './auth.state';
-import { AddPlayer, AddText, Finished, GetCurrentAlbumById, GetPlayersFromFirestore, SetPlayers, UpdateAlbumId, UpdatePlayerIDs } from './player.actions';
-import { SetRoom, UpdateRound } from './room.actions';
+import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
+import { tap } from 'rxjs/operators';
+import { AddPlayer, AddText, Finished, GetPlayersFromFirestore, SetPlayers, UpdateAlbumId, UpdatePlayerIDs } from './player.actions';
+import { UpdateRound } from './room.actions';
 import { RoomInterface, RoomState } from './room.state';
-import { SetMyUser } from './user.actions';
 import { UserState } from './user.state';
 
 export interface PlayerInterface {
@@ -25,16 +21,8 @@ export interface PlayerStateModel {
   players: PlayerInterface[];
 }
 
-/*
-function getDefaultState(): PlayerStateModel {
-  return {
-    players: []
-  };
-}*/
-
 @State<PlayerStateModel>({
   name: 'playerstate',
-  // defaults: getDefaultState(),
 })
 @Injectable()
 export class PlayerState implements NgxsOnInit {
@@ -69,37 +57,7 @@ export class PlayerState implements NgxsOnInit {
     return thisPlayer;
   }
 
-
-  ngxsOnInit(context?: StateContext<any>): void {
-    /*
-    const fireStore = this.angularFireStore;
-
-    this.store
-      .select(RoomState.roomId)
-      .pipe(
-        switchMap((roomId) => {
-          if (!roomId) {
-            return of(null);
-          } else {
-            return fireStore
-              .collection('rooms')
-              .doc(roomId)
-              .collection<PlayerInterface>('players')
-              .valueChanges({
-                idField: 'id',
-              })
-              .pipe(
-                tap((players) => {
-                  context?.dispatch(new SetPlayers(players));
-                })
-              );
-          }
-        })
-      )
-      .subscribe();
-      */
-  }
-
+  ngxsOnInit(context?: StateContext<any>): void { }
 
   @Action(AddPlayer)
   addPlayer(context: StateContext<PlayerStateModel>, action: AddPlayer): void {

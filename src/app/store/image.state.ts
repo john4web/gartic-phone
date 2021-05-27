@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
-import firebase from 'firebase';
 import { ChangeImage } from './image.actions';
 
 export interface ImageInterface {

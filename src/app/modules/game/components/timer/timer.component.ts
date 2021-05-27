@@ -42,8 +42,6 @@ export class TimerComponent implements OnInit, OnDestroy {
     this.interval = setInterval(() => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
-        // save remainingtime in fireStore
-        // this.store.dispatch(new UpdateTimer(this.timeLeft));
       } else {
         this.showCountDown = false;
         if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
@@ -58,7 +56,6 @@ export class TimerComponent implements OnInit, OnDestroy {
 
         clearInterval(this.interval);
         this.timeLeft = 20;
-        // this.store.dispatch(new UpdateTimer(this.timeLeft));
       }
     }, 1000);
   }

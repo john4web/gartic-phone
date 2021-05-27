@@ -1,14 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
-import { AuthState } from './auth.state';
-import { PlayerInterface, PlayerState, PlayerStateModel } from './player.state';
+import { PlayerInterface, PlayerState } from './player.state';
 import { ChangeAlbumIndex, ChangeRoomPage, CreateRoom, DeleteRoom, GetRoomFromFirestore, SetRoom, UpdateRound } from './room.actions';
-import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { AddPlayer } from './player.actions';
-import { ImageState } from './image.state';
 import { UserState } from './user.state';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SetupAlbum } from './album.action';
 
 export interface RoomInterface {
@@ -23,19 +20,8 @@ export interface RoomStateModel {
   room: RoomInterface;
 }
 
-/*
-function getDefaultState(): RoomStateModel {
-  return {
-    room: {
-      createdAt: new Date(),
-      id: ''
-    }
-  };
-}*/
-
 @State<RoomStateModel>({
   name: 'roomstate',
-  // defaults: getDefaultState(),
 })
 @Injectable()
 export class RoomState implements NgxsOnInit {
@@ -63,7 +49,7 @@ export class RoomState implements NgxsOnInit {
 
 
 
-  constructor(private angularAuth: AngularFireAuth, private router: Router, private angularFireStore: AngularFirestore, private store: Store, private route: ActivatedRoute, private ngZone: NgZone) {
+  constructor(private router: Router, private angularFireStore: AngularFirestore, private store: Store, private ngZone: NgZone) {
 
   }
 
@@ -108,33 +94,6 @@ export class RoomState implements NgxsOnInit {
         this.store.dispatch(new AddPlayer(authID, newPlayer));
 
       });
-
-
-
-
-    // add the host as a player
-
-    /* const authID = this.store.selectSnapshot(AuthState.userId);
-
-     this.angularFireStore.collection('rooms').doc(authID).set({}).then(() => {
-       console.log('done');
-     });*/
-    /*
-
-
-
-        const roomID = this.store.selectSnapshot(UserState.userId);
-        // Adding new room
-        this.angularFireStore
-          .collection<RoomInterface>('rooms')
-          .doc(roomID).set({
-            createdAt: new Date(),
-            id: roomID
-          });
-
-        const fileName: string = '../assets/images/' + this.store.selectSnapshot(ImageState.currentImage).imageName;
-        context?.dispatch(new AddPlayer(roomID!, action.hostName, true, fileName));
-        */
 
   }
 
@@ -183,7 +142,7 @@ export class RoomState implements NgxsOnInit {
   }
 
   @Action(DeleteRoom)
-  deleteRoom(context: StateContext<RoomStateModel>, action: DeleteRoom) {
+  deleteRoom(context: StateContext<RoomStateModel>, action: DeleteRoom): void {
     this.angularFireStore
       .collection<RoomInterface>('rooms')
       .doc(this.store.selectSnapshot(RoomState.roomId)).delete();

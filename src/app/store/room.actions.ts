@@ -1,4 +1,4 @@
-import { RoomInterface, RoomState } from './room.state';
+import { RoomInterface } from './room.state';
 
 export class CreateRoom {
   static readonly type = '[Room] CreateRoom';

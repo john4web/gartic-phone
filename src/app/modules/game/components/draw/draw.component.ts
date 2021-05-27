@@ -36,9 +36,6 @@ export class DrawComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
-    // this.timerService.startTimer();
-    // }
     if (this.store.selectSnapshot(RoomState.currentPage) !== 1
       || this.store.selectSnapshot(RoomState.round) % 2 === 0) {
       this.store.dispatch(new SetMyUser()).toPromise().then(() => {
@@ -46,7 +43,6 @@ export class DrawComponent implements OnInit {
       });
     }
     this.drawingChanged('');
-
   }
 
   drawingChanged(newDrawing): void {

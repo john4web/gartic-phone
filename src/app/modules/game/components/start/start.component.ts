@@ -2,7 +2,7 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { AddContent, SetAlbum } from 'src/app/store/album.action';
+import { AddContent } from 'src/app/store/album.action';
 import { Finished, UpdateAlbumId } from 'src/app/store/player.actions';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UpdateRound } from 'src/app/store/room.actions';
@@ -37,10 +37,6 @@ export class StartComponent implements OnInit {
 
 
   ngOnInit(): void {
-
-    // if (this.store.selectSnapshot(RoomState.roomId) === this.store.selectSnapshot(UserState.userId)) {
-    // this.timerService.startTimer();
-    // }
     if (this.store.selectSnapshot(RoomState.currentPage) !== 1
       || this.store.selectSnapshot(RoomState.round) !== 0) {
       this.store.dispatch(new SetMyUser()).toPromise().then(() => {
@@ -48,7 +44,6 @@ export class StartComponent implements OnInit {
       });
     }
     this.saveStoryText();
-
   }
 
 

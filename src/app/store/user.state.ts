@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import firebase from 'firebase';
 import { v4 as uuid } from 'uuid';
-import User = firebase.User;
 import { SetMyUser } from './user.actions';
 
 export interface UserStateModel {

@@ -2,17 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { UserChanged } from 'src/app/store/auth.actions';
 import { ChangeImage } from 'src/app/store/image.actions';
 import { ImageInterface, ImageState } from 'src/app/store/image.state';
 import { AddPlayer, GetPlayersFromFirestore } from 'src/app/store/player.actions';
 import { CreateRoom, GetRoomFromFirestore } from 'src/app/store/room.actions';
-import firebase from 'firebase';
-import User = firebase.User;
-import { AuthState } from 'src/app/store/auth.state';
 import { PlayerInterface, PlayerState } from 'src/app/store/player.state';
 import { UserState } from 'src/app/store/user.state';
-import { switchMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 import { RoomState } from 'src/app/store/room.state';
 import { Observable } from 'rxjs';
 @Component({
@@ -77,26 +73,6 @@ export class HomeComponent implements OnInit {
       if (typeof roomId !== undefined) { this.router.navigate(['home/lobby']); }
     });
 
-
-    /*
-    this.store.dispatch(new UserUpdate(this.pastedRoomID));
-
-    //localStorage.setItem('joinedRoomID', this.pastedRoomID);
-    this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
-
-
-
-        const a = this.angularAuth.signInWithCredential
-        this.store.dispatch(new UserChanged(
-
-        ));
-
-        this.angularAuth.signInWithCredential(this.pastedRoomID);
-
-        this.store.dispatch(new GetRoomFromFirestore(this.pastedRoomID));
-        this.store.dispatch(new AddPlayer(this.pastedRoomID, this.userName, false, this.imageFile));
-        this.router.navigate(['home/lobby']);
-        */
   }
 
   change(): void {

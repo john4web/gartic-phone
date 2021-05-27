@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { AuthState } from './store/auth.state';
 import { UserState } from './store/user.state';
 
 @Component({

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Album, AlbumState } from 'src/app/store/album.state';
-import { UserChanged } from 'src/app/store/auth.actions';
 import { PlayerState } from 'src/app/store/player.state';
 import { ChangeAlbumIndex, ChangeRoomPage, DeleteRoom } from 'src/app/store/room.actions';
 import { RoomState } from 'src/app/store/room.state';

@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Action, NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
-import firebase from 'firebase';
-import { v4 as uuid } from 'uuid';
-import User = firebase.User;
-import { SetMyUser } from './user.actions';
-import { AddContent, GetLastItem, SetAlbum, SetupAlbum, SetupAlbums } from './album.action';
+import { AddContent, SetAlbum, SetupAlbum, SetupAlbums } from './album.action';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { RoomInterface, RoomState } from './room.state';
 import { PlayerInterface, PlayerState } from './player.state';
 import { UserState } from './user.state';
-import { switchMap, tap } from 'rxjs/operators';
-import { from, Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 
 export interface AlbumItemInterface {
@@ -74,19 +69,7 @@ export class AlbumState implements NgxsOnInit {
     return albumId;
   }
 
-
-  /*
-    // allows to easily access the users id
-    @Selector()
-    static userId(state: UserStateModel): string {
-      return state.user;
-    }
-  */
-  ngxsOnInit(context?: StateContext<AlbumStateModel>): void {
-
-    // Todo: Listen on Album Changes in firestore
-
-  }
+  ngxsOnInit(context?: StateContext<AlbumStateModel>): void { }
 
   @Action(SetupAlbum)
   setupAlbum(context: StateContext<AlbumStateModel>, action: SetupAlbum): void {
@@ -162,25 +145,6 @@ export class AlbumState implements NgxsOnInit {
       albums: newAlbums,
     });
   }
-
-  /*
-  @Action(GetLastItem)
-  getLastItem(context: StateContext<string>, action: GetLastItem): any {
-    const round = this.store.selectSnapshot(RoomState.round);
-    const thisUserID = this.store.selectSnapshot(UserState.userId);
-    const currentAlbumId = this.getCurrentAlbumID(thisUserID);
-    const albums = this.store.selectSnapshot(AlbumState.albums);
-
-    let item: string;
-    albums.forEach(album => {
-      if (album.playerId === currentAlbumId) { item = album.album[round - 1].content; }
-    });
-
-    console.log(item);
-    return item;
-  }
-  */
-
 
   @Action(AddContent)
   addStoryText(context: StateContext<AlbumStateModel>, action: AddContent): void {
