@@ -65,5 +65,9 @@ export class StartComponent implements OnInit {
     this.store.dispatch(new Finished(this.store.selectSnapshot(UserState.userId), true));
   }
 
+  storyTextIsFilled() {
+    return this.storyText === '' ? false : true;
+  }
+
 
 }

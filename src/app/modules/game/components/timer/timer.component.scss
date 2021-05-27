@@ -8,7 +8,7 @@
 }
 
 #countdown-number {
-  color: red;
+  color: white;
   display: inline-block;
   line-height: 40px;
 }
@@ -27,7 +27,7 @@ svg circle {
   stroke-dashoffset: 0px;
   stroke-linecap: round;
   stroke-width: 2px;
-  stroke: red;
+  stroke: white;
   fill: none;
   animation: var(--animation);
 }
